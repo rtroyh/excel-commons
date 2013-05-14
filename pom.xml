@@ -5,7 +5,7 @@
     <groupId>com.gather</groupId>
     <artifactId>excelcommons</artifactId>
     <packaging>jar</packaging>
-    <version>3.7</version>
+    <version>3.9</version>
     <name>excelcommons</name>
 
     <properties>
