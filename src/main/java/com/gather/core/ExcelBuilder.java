@@ -2,6 +2,7 @@ package com.gather.core;
 
 import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -16,41 +17,56 @@ import java.util.List;
 public class ExcelBuilder {
     private static final Logger LOG = Logger.getLogger(ExcelBuilder.class);
 
-    public ByteArrayOutputStream getExcelReport(List<IDataTableModel> models) {
-        Workbook wb = new HSSFWorkbook();
+    public ByteArrayOutputStream getExcelReport(IDataTableModel iteracionModel,
+                                                List<IDataTableModel> models) {
 
-        for (IDataTableModel model : models) {
-            Sheet sheet = createSheet(model,
-                                      wb);
+        if (iteracionModel != null && Validator.validateList(models)) {
+            Workbook wb = new HSSFWorkbook();
 
-            this.buildSheet(model,
-                            wb,
-                            sheet);
+            for (IDataTableModel model : models) {
+                Sheet sheet = createSheet(iteracionModel,
+                                          model,
+                                          wb);
+
+                this.buildSheet(iteracionModel,
+                                model,
+                                wb,
+                                sheet);
+            }
+
+            return buildStream(wb);
         }
 
-        return buildStream(wb);
+        return null;
     }
 
-    private void buildSheet(IDataTableModel model,
-                           Workbook wb,
-                           Sheet sheet) {
-        buildSheetHeader(model,
+    private void buildSheet(IDataTableModel iteracionModel,
+                            IDataTableModel model,
+                            Workbook wb,
+                            Sheet sheet) {
+        buildSheetHeader(iteracionModel,
+                         model,
                          wb,
                          sheet);
 
         short y = 1;
+
+        final Object mensaje = iteracionModel.getTitles().get(0).get(8);
+        boolean existeMensaje = Validator.validateString(mensaje);
+
         populateSheet(model,
                       wb,
                       sheet,
-                      y);
+                      existeMensaje ? (short) (y + 2) : y);
 
         for (short x = 0; x < model.getHeaders().size() + 2; x++) {
             sheet.autoSizeColumn(x);
         }
     }
 
-    private Sheet createSheet(IDataTableModel model,
-                             Workbook wb) {
+    private Sheet createSheet(IDataTableModel iteracionModel,
+                              IDataTableModel model,
+                              Workbook wb) {
         Sheet sheet = null;
         if (Validator.validateList(model.getTitles())) {
             if (Validator.validateString(model.getTitles().get(0).get(4))) {
@@ -65,10 +81,13 @@ public class ExcelBuilder {
             sheet = wb.createSheet();
         }
 
+        final Object mensaje = iteracionModel.getTitles().get(0).get(8);
+        boolean existeMensaje = Validator.validateString(mensaje);
+
         sheet.createFreezePane(0,
-                               1,
+                               existeMensaje ? 3 : 1,
                                0,
-                               1);
+                               existeMensaje ? 3 : 1);
 
         return sheet;
     }
@@ -87,19 +106,52 @@ public class ExcelBuilder {
         return os;
     }
 
-    private void buildSheetHeader(IDataTableModel model,
+    private void buildSheetHeader(IDataTableModel iteracionModel,
+                                  IDataTableModel model,
                                   Workbook wb,
                                   Sheet sheet) {
+        short rowIndex = 0;
+        short columnIndex = 0;
+        final Object mensaje = iteracionModel.getTitles().get(0).get(8);
+        boolean existeMensaje = Validator.validateString(mensaje);
 
-        short x = 0;
-        Row headerRow = sheet.createRow(x);
+        if (existeMensaje) {
+            final String frase = mensaje.toString();
+            final String[] strings = StringUtils.split(frase,
+                                                       "|");
+
+            Row headerRow = sheet.createRow(rowIndex);
+            Cell cell = this.createCell(wb,
+                                        headerRow,
+                                        columnIndex,
+                                        CellStyle.ALIGN_LEFT,
+                                        CellStyle.VERTICAL_TOP);
+            final CellStyle cellStyle = cell.getCellStyle();
+            Font font = wb.createFont();
+            font.setFontHeightInPoints((short) 11);
+            font.setBoldweight(Font.BOLDWEIGHT_NORMAL);
+            font.setColor(HSSFColor.BLACK.index);
+            cellStyle.setFont(font);
+
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String string : strings) {
+                stringBuilder.append(string);
+                stringBuilder.append(" ");
+            }
+
+            cell.setCellValue(stringBuilder.toString());
+            rowIndex++;
+            rowIndex++;
+        }
+
+        Row headerRow = sheet.createRow(rowIndex);
 
         for (List<Object> header : model.getHeaders()) {
             if (!header.get(1).equals(5) && header.get(4).equals(1)) {
 
                 Cell cell = this.createCell(wb,
                                             headerRow,
-                                            x,
+                                            columnIndex,
                                             CellStyle.ALIGN_CENTER,
                                             CellStyle.VERTICAL_CENTER);
 
@@ -117,7 +169,7 @@ public class ExcelBuilder {
                 String title = Validator.validateString(header.get(0)) ? header.get(0).toString() : " ";
 
                 cell.setCellValue(title);
-                x++;
+                columnIndex++;
             }
         }
     }
@@ -161,8 +213,8 @@ public class ExcelBuilder {
 
                         if (esPorcentual) {
                             cell.setCellValue(Float.valueOf(o.toString()));
-                            agregarEstiloPorcentualCelda(wb,
-                                                         cell);
+                            setearEstiloPorcentualCelda(wb,
+                                                        cell);
                         }
                         if (esNumerico || esPorcentual) {
                             if (o instanceof Double) {
@@ -203,12 +255,10 @@ public class ExcelBuilder {
         }
     }
 
-    private void agregarEstiloPorcentualCelda(Workbook wb,
-                                              Cell cell) {
+    private void setearEstiloPorcentualCelda(Workbook wb,
+                                             Cell cell) {
         CellStyle style = wb.createCellStyle();
         style.setDataFormat(wb.createDataFormat().getFormat("0.00%"));
-
-
         cell.setCellStyle(style);
     }
 }
