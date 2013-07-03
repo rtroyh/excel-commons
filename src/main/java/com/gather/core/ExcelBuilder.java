@@ -54,8 +54,8 @@ public class ExcelBuilder {
         short y = 1;
 
         boolean existeMensaje = false;
-        if (Validator.validateList(model.getTitles().get(0),
-                                   8)) {
+        if (Validator.validateList(iteracionModel.getTitles().get(0),
+                                   9)) {
             final Object mensaje = iteracionModel.getTitles().get(0).get(8);
             existeMensaje = Validator.validateString(mensaje);
         }
@@ -88,8 +88,8 @@ public class ExcelBuilder {
             }
 
             boolean existeMensaje = false;
-            if (Validator.validateList(model.getTitles().get(0),
-                                       8)) {
+            if (Validator.validateList(iteracionModel.getTitles().get(0),
+                                       9)) {
                 final Object mensaje = iteracionModel.getTitles().get(0).get(8);
                 existeMensaje = Validator.validateString(mensaje);
             }
@@ -125,8 +125,8 @@ public class ExcelBuilder {
         short columnIndex = 0;
         Object mensaje = null;
         boolean existeMensaje = false;
-        if (Validator.validateList(model.getTitles().get(0),
-                                   8)) {
+        if (Validator.validateList(iteracionModel.getTitles().get(0),
+                                   9)) {
             mensaje = iteracionModel.getTitles().get(0).get(8);
             existeMensaje = Validator.validateString(mensaje);
         }
