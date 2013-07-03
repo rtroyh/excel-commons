@@ -28,10 +28,12 @@ public class ExcelBuilder {
                                           model,
                                           wb);
 
-                this.buildSheet(iteracionModel,
-                                model,
-                                wb,
-                                sheet);
+                if (sheet != null) {
+                    this.buildSheet(iteracionModel,
+                                    model,
+                                    wb,
+                                    sheet);
+                }
             }
 
             return buildStream(wb);
@@ -51,8 +53,12 @@ public class ExcelBuilder {
 
         short y = 1;
 
-        final Object mensaje = iteracionModel.getTitles().get(0).get(8);
-        boolean existeMensaje = Validator.validateString(mensaje);
+        boolean existeMensaje = false;
+        if (Validator.validateList(model.getTitles().get(0),
+                                   8)) {
+            final Object mensaje = iteracionModel.getTitles().get(0).get(8);
+            existeMensaje = Validator.validateString(mensaje);
+        }
 
         populateSheet(model,
                       wb,
@@ -75,19 +81,24 @@ public class ExcelBuilder {
                                        " ");
                 sheet = wb.createSheet(name);
             }
+
+
+            if (sheet == null) {
+                sheet = wb.createSheet();
+            }
+
+            boolean existeMensaje = false;
+            if (Validator.validateList(model.getTitles().get(0),
+                                       8)) {
+                final Object mensaje = iteracionModel.getTitles().get(0).get(8);
+                existeMensaje = Validator.validateString(mensaje);
+            }
+
+            sheet.createFreezePane(0,
+                                   existeMensaje ? 3 : 1,
+                                   0,
+                                   existeMensaje ? 3 : 1);
         }
-
-        if (sheet == null) {
-            sheet = wb.createSheet();
-        }
-
-        final Object mensaje = iteracionModel.getTitles().get(0).get(8);
-        boolean existeMensaje = Validator.validateString(mensaje);
-
-        sheet.createFreezePane(0,
-                               existeMensaje ? 3 : 1,
-                               0,
-                               existeMensaje ? 3 : 1);
 
         return sheet;
     }
@@ -112,8 +123,13 @@ public class ExcelBuilder {
                                   Sheet sheet) {
         short rowIndex = 0;
         short columnIndex = 0;
-        final Object mensaje = iteracionModel.getTitles().get(0).get(8);
-        boolean existeMensaje = Validator.validateString(mensaje);
+        Object mensaje = null;
+        boolean existeMensaje = false;
+        if (Validator.validateList(model.getTitles().get(0),
+                                   8)) {
+            mensaje = iteracionModel.getTitles().get(0).get(8);
+            existeMensaje = Validator.validateString(mensaje);
+        }
 
         if (existeMensaje) {
             final String frase = mensaje.toString();
@@ -192,7 +208,6 @@ public class ExcelBuilder {
                                Workbook wb,
                                Sheet sheet,
                                short y) {
-        short x;
         for (List<Object> row : model.getRows()) {
             Row eRow = sheet.createRow(y);
 
