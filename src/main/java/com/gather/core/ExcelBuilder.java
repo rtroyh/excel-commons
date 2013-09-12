@@ -82,7 +82,6 @@ public class ExcelBuilder {
                 sheet = wb.createSheet(name);
             }
 
-
             if (sheet == null) {
                 sheet = wb.createSheet();
             }
@@ -170,7 +169,6 @@ public class ExcelBuilder {
 
         for (List<Object> header : model.getHeaders()) {
             if (!header.get(1).equals(5) && header.get(4).equals(1)) {
-
                 Cell cell = headerRow.createCell(columnIndex);
                 cell.setCellStyle(cellStyle);
 
