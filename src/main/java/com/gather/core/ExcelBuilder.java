@@ -137,11 +137,13 @@ public class ExcelBuilder {
                                                        "|");
 
             Row headerRow = sheet.createRow(rowIndex);
+
             Cell cell = this.createCell(wb,
                                         headerRow,
                                         columnIndex,
                                         CellStyle.ALIGN_LEFT,
                                         CellStyle.VERTICAL_TOP);
+
             final CellStyle cellStyle = cell.getCellStyle();
             Font font = wb.createFont();
             font.setFontHeightInPoints((short) 11);
@@ -161,26 +163,16 @@ public class ExcelBuilder {
         }
 
         Row headerRow = sheet.createRow(rowIndex);
+        Font font = getHeaderFont(wb);
+
+        final CellStyle cellStyle = getCellStyleHeader(wb,
+                                                       font);
 
         for (List<Object> header : model.getHeaders()) {
             if (!header.get(1).equals(5) && header.get(4).equals(1)) {
 
-                Cell cell = this.createCell(wb,
-                                            headerRow,
-                                            columnIndex,
-                                            CellStyle.ALIGN_CENTER,
-                                            CellStyle.VERTICAL_CENTER);
-
-                final CellStyle cellStyle = cell.getCellStyle();
-
-                Font font = wb.createFont();
-                font.setFontHeightInPoints((short) 11);
-                font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-                font.setColor(HSSFColor.WHITE.index);
-                cellStyle.setFillForegroundColor(HSSFColor.DARK_BLUE.index);
-                cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
-                cellStyle.setFont(font);
+                Cell cell = headerRow.createCell(columnIndex);
+                cell.setCellStyle(cellStyle);
 
                 String title = Validator.validateString(header.get(0)) ? header.get(0).toString() : " ";
 
@@ -188,6 +180,25 @@ public class ExcelBuilder {
                 columnIndex++;
             }
         }
+    }
+
+    private CellStyle getCellStyleHeader(Workbook wb,
+                                         Font font) {
+        CellStyle cellStyle = wb.createCellStyle();
+        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
+        cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+        cellStyle.setFillForegroundColor(HSSFColor.DARK_BLUE.index);
+        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        cellStyle.setFont(font);
+        return cellStyle;
+    }
+
+    private Font getHeaderFont(Workbook wb) {
+        Font font = wb.createFont();
+        font.setFontHeightInPoints((short) 11);
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        font.setColor(HSSFColor.WHITE.index);
+        return font;
     }
 
     private Cell createCell(Workbook wb,
@@ -208,6 +219,8 @@ public class ExcelBuilder {
                                Workbook wb,
                                Sheet sheet,
                                short y) {
+        CellStyle cellStylePorcentual = getCellStylePorcentual(wb);
+
         for (List<Object> row : model.getRows()) {
             Row eRow = sheet.createRow(y);
 
@@ -228,9 +241,9 @@ public class ExcelBuilder {
 
                         if (esPorcentual) {
                             cell.setCellValue(Float.valueOf(o.toString()));
-                            setearEstiloPorcentualCelda(wb,
-                                                        cell);
+                            cell.setCellStyle(cellStylePorcentual);
                         }
+
                         if (esNumerico || esPorcentual) {
                             if (o instanceof Double) {
                                 cell.setCellValue((Double) o);
@@ -270,10 +283,9 @@ public class ExcelBuilder {
         }
     }
 
-    private void setearEstiloPorcentualCelda(Workbook wb,
-                                             Cell cell) {
-        CellStyle style = wb.createCellStyle();
-        style.setDataFormat(wb.createDataFormat().getFormat("0.00%"));
-        cell.setCellStyle(style);
+    private CellStyle getCellStylePorcentual(Workbook wb) {
+        CellStyle cellStylePorcentual = wb.createCellStyle();
+        cellStylePorcentual.setDataFormat(wb.createDataFormat().getFormat("0.00%"));
+        return cellStylePorcentual;
     }
 }
