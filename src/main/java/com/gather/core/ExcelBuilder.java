@@ -19,7 +19,6 @@ public class ExcelBuilder {
 
     public ByteArrayOutputStream getExcelReport(IDataTableModel iteracionModel,
                                                 List<IDataTableModel> models) {
-
         if (iteracionModel != null && Validator.validateList(models)) {
             Workbook wb = new HSSFWorkbook();
 
