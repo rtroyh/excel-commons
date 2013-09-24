@@ -53,9 +53,9 @@ public class ExcelBuilder {
 
         boolean existeMensaje = existeMensaje(iteracionModel);
 
-        this.populateSheet(model,
-                           sheet,
-                           existeMensaje ? (short) (y + 2) : y);
+        this.buildSheetBody(model,
+                            sheet,
+                            existeMensaje ? (short) (y + 2) : y);
 
         for (short x = 0; x < model.getHeaders().size() + 2; x++) {
             sheet.autoSizeColumn(x);
@@ -182,9 +182,9 @@ public class ExcelBuilder {
         return cell;
     }
 
-    private void populateSheet(IDataTableModel model,
-                               Sheet sheet,
-                               short y) {
+    private void buildSheetBody(IDataTableModel model,
+                                Sheet sheet,
+                                short y) {
         CellStyle cellStylePorcentual = getCellStylePorcentual(sheet.getWorkbook());
 
         for (List<Object> row : model.getRows()) {
