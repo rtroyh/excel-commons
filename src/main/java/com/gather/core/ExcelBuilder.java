@@ -1,5 +1,7 @@
 package com.gather.core;
 
+import com.gather.core.sheet.DefaultSheetBuilder;
+import com.gather.core.sheet.ISheetBuilder;
 import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
 import org.apache.commons.lang3.StringUtils;
@@ -23,15 +25,14 @@ public class ExcelBuilder {
             Workbook wb = new HSSFWorkbook();
 
             for (IDataTableModel model : models) {
-                Sheet sheet = createSheet(iteracionModel,
-                                          model,
-                                          wb);
+                ISheetBuilder sheetBuilder = new DefaultSheetBuilder(iteracionModel,
+                                                                     model);
+                Sheet sheet = sheetBuilder.createSheet(wb);
 
                 if (sheet != null) {
-                    this.buildSheet(iteracionModel,
-                                    model,
-                                    wb,
-                                    sheet);
+                    this.populateSheet(iteracionModel,
+                                       model,
+                                       sheet);
                 }
             }
 
@@ -41,64 +42,40 @@ public class ExcelBuilder {
         return null;
     }
 
-    private void buildSheet(IDataTableModel iteracionModel,
-                            IDataTableModel model,
-                            Workbook wb,
-                            Sheet sheet) {
+    private void populateSheet(IDataTableModel iteracionModel,
+                               IDataTableModel model,
+                               Sheet sheet) {
         buildSheetHeader(iteracionModel,
                          model,
-                         wb,
                          sheet);
 
         short y = 1;
 
-        boolean existeMensaje = false;
-        if (Validator.validateList(iteracionModel.getTitles().get(0),
-                                   9)) {
-            final Object mensaje = iteracionModel.getTitles().get(0).get(8);
-            existeMensaje = Validator.validateString(mensaje);
-        }
+        boolean existeMensaje = existeMensaje(iteracionModel);
 
-        populateSheet(model,
-                      wb,
-                      sheet,
-                      existeMensaje ? (short) (y + 2) : y);
+        this.populateSheet(model,
+                           sheet,
+                           existeMensaje ? (short) (y + 2) : y);
 
         for (short x = 0; x < model.getHeaders().size() + 2; x++) {
             sheet.autoSizeColumn(x);
         }
     }
 
-    private Sheet createSheet(IDataTableModel iteracionModel,
-                              IDataTableModel model,
-                              Workbook wb) {
-        Sheet sheet = null;
-        if (Validator.validateList(model.getTitles())) {
-            if (Validator.validateString(model.getTitles().get(0).get(4))) {
-                String name = model.getTitles().get(0).get(4).toString();
-                name = name.replaceAll("/",
-                                       " ");
-                sheet = wb.createSheet(name);
-            }
+    private boolean existeMensaje(IDataTableModel iteracionModel) {
+        boolean existeMensaje = false;
 
-            if (sheet == null) {
-                sheet = wb.createSheet();
-            }
-
-            boolean existeMensaje = false;
-            if (Validator.validateList(iteracionModel.getTitles().get(0),
-                                       9)) {
-                final Object mensaje = iteracionModel.getTitles().get(0).get(8);
-                existeMensaje = Validator.validateString(mensaje);
-            }
-
-            sheet.createFreezePane(0,
-                                   existeMensaje ? 3 : 1,
-                                   0,
-                                   existeMensaje ? 3 : 1);
+        if (Validator.validateList(iteracionModel.getTitles().get(0),
+                                   9)) {
+            final Object mensaje = getMensaje(iteracionModel);
+            existeMensaje = Validator.validateString(mensaje);
         }
 
-        return sheet;
+        return existeMensaje;
+    }
+
+    private String getMensaje(IDataTableModel iteracionModel) {
+        return iteracionModel.getTitles().get(0).get(8).toString();
     }
 
     private ByteArrayOutputStream buildStream(Workbook wb) {
@@ -117,33 +94,26 @@ public class ExcelBuilder {
 
     private void buildSheetHeader(IDataTableModel iteracionModel,
                                   IDataTableModel model,
-                                  Workbook wb,
                                   Sheet sheet) {
         short rowIndex = 0;
         short columnIndex = 0;
-        Object mensaje = null;
-        boolean existeMensaje = false;
-        if (Validator.validateList(iteracionModel.getTitles().get(0),
-                                   9)) {
-            mensaje = iteracionModel.getTitles().get(0).get(8);
-            existeMensaje = Validator.validateString(mensaje);
-        }
+        boolean existeMensaje = this.existeMensaje(iteracionModel);
 
         if (existeMensaje) {
-            final String frase = mensaje.toString();
+            final String frase = this.getMensaje(iteracionModel);
             final String[] strings = StringUtils.split(frase,
                                                        "|");
 
             Row headerRow = sheet.createRow(rowIndex);
 
-            Cell cell = this.createCell(wb,
+            Cell cell = this.createCell(sheet.getWorkbook(),
                                         headerRow,
                                         columnIndex,
                                         CellStyle.ALIGN_LEFT,
                                         CellStyle.VERTICAL_TOP);
 
             final CellStyle cellStyle = cell.getCellStyle();
-            Font font = wb.createFont();
+            Font font = sheet.getWorkbook().createFont();
             font.setFontHeightInPoints((short) 11);
             font.setBoldweight(Font.BOLDWEIGHT_NORMAL);
             font.setColor(HSSFColor.BLACK.index);
@@ -161,9 +131,9 @@ public class ExcelBuilder {
         }
 
         Row headerRow = sheet.createRow(rowIndex);
-        Font font = getHeaderFont(wb);
+        Font font = getHeaderFont(sheet.getWorkbook());
 
-        final CellStyle cellStyle = getCellStyleHeader(wb,
+        final CellStyle cellStyle = getCellStyleHeader(sheet.getWorkbook(),
                                                        font);
 
         for (List<Object> header : model.getHeaders()) {
@@ -213,10 +183,9 @@ public class ExcelBuilder {
     }
 
     private void populateSheet(IDataTableModel model,
-                               Workbook wb,
                                Sheet sheet,
                                short y) {
-        CellStyle cellStylePorcentual = getCellStylePorcentual(wb);
+        CellStyle cellStylePorcentual = getCellStylePorcentual(sheet.getWorkbook());
 
         for (List<Object> row : model.getRows()) {
             Row eRow = sheet.createRow(y);
