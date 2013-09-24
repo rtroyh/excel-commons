@@ -19,6 +19,9 @@ import java.util.List;
 public class ExcelBuilder {
     private static final Logger LOG = Logger.getLogger(ExcelBuilder.class);
 
+    private CellStyle cellStyleHeader;
+    private CellStyle cellStylePorcentual;
+
     public ByteArrayOutputStream getExcelReport(IDataTableModel iteracionModel,
                                                 List<IDataTableModel> models) {
         if (iteracionModel != null && Validator.validateList(models)) {
@@ -45,9 +48,9 @@ public class ExcelBuilder {
     private void populateSheet(IDataTableModel iteracionModel,
                                IDataTableModel model,
                                Sheet sheet) {
-        buildSheetHeader(iteracionModel,
-                         model,
-                         sheet);
+        this.buildSheetHeader(iteracionModel,
+                              model,
+                              sheet);
 
         short y = 1;
 
@@ -100,41 +103,15 @@ public class ExcelBuilder {
         boolean existeMensaje = this.existeMensaje(iteracionModel);
 
         if (existeMensaje) {
-            final String frase = this.getMensaje(iteracionModel);
-            final String[] strings = StringUtils.split(frase,
-                                                       "|");
-
-            Row headerRow = sheet.createRow(rowIndex);
-
-            Cell cell = this.createCell(sheet.getWorkbook(),
-                                        headerRow,
-                                        columnIndex,
-                                        CellStyle.ALIGN_LEFT,
-                                        CellStyle.VERTICAL_TOP);
-
-            final CellStyle cellStyle = cell.getCellStyle();
-            Font font = sheet.getWorkbook().createFont();
-            font.setFontHeightInPoints((short) 11);
-            font.setBoldweight(Font.BOLDWEIGHT_NORMAL);
-            font.setColor(HSSFColor.BLACK.index);
-            cellStyle.setFont(font);
-
-            StringBuilder stringBuilder = new StringBuilder();
-            for (String string : strings) {
-                stringBuilder.append(string);
-                stringBuilder.append(" ");
-            }
-
-            cell.setCellValue(stringBuilder.toString());
-            rowIndex++;
-            rowIndex++;
+            rowIndex = createMensaje(iteracionModel,
+                                     sheet,
+                                     rowIndex,
+                                     columnIndex);
         }
 
         Row headerRow = sheet.createRow(rowIndex);
-        Font font = getHeaderFont(sheet.getWorkbook());
 
-        final CellStyle cellStyle = getCellStyleHeader(sheet.getWorkbook(),
-                                                       font);
+        final CellStyle cellStyle = getCellStyleHeader(sheet.getWorkbook());
 
         for (List<Object> header : model.getHeaders()) {
             if (!header.get(1).equals(5) && header.get(4).equals(1)) {
@@ -149,23 +126,58 @@ public class ExcelBuilder {
         }
     }
 
-    private CellStyle getCellStyleHeader(Workbook wb,
-                                         Font font) {
-        CellStyle cellStyle = wb.createCellStyle();
-        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-        cellStyle.setFillForegroundColor(HSSFColor.DARK_BLUE.index);
-        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+    private short createMensaje(IDataTableModel iteracionModel,
+                                Sheet sheet,
+                                short rowIndex,
+                                short columnIndex) {
+        final String frase = this.getMensaje(iteracionModel);
+        final String[] strings = StringUtils.split(frase,
+                                                   "|");
+
+        Row headerRow = sheet.createRow(rowIndex);
+
+        Cell cell = this.createCell(sheet.getWorkbook(),
+                                    headerRow,
+                                    columnIndex,
+                                    CellStyle.ALIGN_LEFT,
+                                    CellStyle.VERTICAL_TOP);
+
+        final CellStyle cellStyle = cell.getCellStyle();
+        Font font = sheet.getWorkbook().createFont();
+        font.setFontHeightInPoints((short) 11);
+        font.setBoldweight(Font.BOLDWEIGHT_NORMAL);
+        font.setColor(HSSFColor.BLACK.index);
         cellStyle.setFont(font);
-        return cellStyle;
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String string : strings) {
+            stringBuilder.append(string);
+            stringBuilder.append(" ");
+        }
+
+        cell.setCellValue(stringBuilder.toString());
+        rowIndex++;
+        rowIndex++;
+        return rowIndex;
     }
 
-    private Font getHeaderFont(Workbook wb) {
-        Font font = wb.createFont();
-        font.setFontHeightInPoints((short) 11);
-        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        font.setColor(HSSFColor.WHITE.index);
-        return font;
+    private CellStyle getCellStyleHeader(Workbook wb) {
+        if (this.cellStyleHeader == null) {
+            this.cellStyleHeader = wb.createCellStyle();
+            this.cellStyleHeader.setAlignment(CellStyle.ALIGN_CENTER);
+            this.cellStyleHeader.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+            this.cellStyleHeader.setFillForegroundColor(HSSFColor.DARK_BLUE.index);
+            this.cellStyleHeader.setFillPattern(CellStyle.SOLID_FOREGROUND);
+
+            Font font = wb.createFont();
+            font.setFontHeightInPoints((short) 11);
+            font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+            font.setColor(HSSFColor.WHITE.index);
+
+            this.cellStyleHeader.setFont(font);
+        }
+
+        return this.cellStyleHeader;
     }
 
     private Cell createCell(Workbook wb,
@@ -250,8 +262,11 @@ public class ExcelBuilder {
     }
 
     private CellStyle getCellStylePorcentual(Workbook wb) {
-        CellStyle cellStylePorcentual = wb.createCellStyle();
-        cellStylePorcentual.setDataFormat(wb.createDataFormat().getFormat("0.00%"));
-        return cellStylePorcentual;
+        if (this.cellStylePorcentual == null) {
+            this.cellStylePorcentual = wb.createCellStyle();
+            this.cellStylePorcentual.setDataFormat(wb.createDataFormat().getFormat("0.00%"));
+        }
+
+        return this.cellStylePorcentual;
     }
 }
