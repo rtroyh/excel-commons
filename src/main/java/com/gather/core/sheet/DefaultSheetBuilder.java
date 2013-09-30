@@ -29,7 +29,7 @@ public class DefaultSheetBuilder implements ISheetCreator {
 
     @Override
     public Sheet createSheet(Workbook wb) {
-        Sheet sheet = null;
+        sheet = null;
         if (Validator.validateList(model.getTitles())) {
             if (Validator.validateString(model.getTitles().get(0).get(4))) {
                 String name = model.getTitles().get(0).get(4).toString();
