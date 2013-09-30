@@ -10,6 +10,8 @@ import org.apache.poi.ss.usermodel.Workbook;
  * Time: 10:45 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface ISheetBuilder {
+public interface ISheetCreator {
     public Sheet createSheet(Workbook wb);
+
+    public Sheet getSheet();
 }

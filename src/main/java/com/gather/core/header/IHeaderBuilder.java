@@ -1,6 +1,6 @@
 package com.gather.core.header;
 
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,6 +10,5 @@ import org.apache.poi.ss.usermodel.Row;
  * To change this template use File | Settings | File Templates.
  */
 public interface IHeaderBuilder {
-
-    public void createHeader(Row headerRow);
+    public void buildHeader(Sheet sheet);
 }

@@ -12,14 +12,19 @@ import org.apache.poi.ss.usermodel.Workbook;
  * Time: 10:56 AM
  * To change this template use File | Settings | File Templates.
  */
-public class DefaultSheetBuilder implements ISheetBuilder {
+public class DefaultSheetBuilder implements ISheetCreator {
     private IDataTableModel iteracionModel;
     private IDataTableModel model;
+    private Sheet sheet;
 
     public DefaultSheetBuilder(IDataTableModel iteracionModel,
                                IDataTableModel model) {
         this.iteracionModel = iteracionModel;
         this.model = model;
+    }
+
+    public Sheet getSheet() {
+        return sheet;
     }
 
     @Override

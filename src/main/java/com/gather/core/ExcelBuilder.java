@@ -1,7 +1,7 @@
 package com.gather.core;
 
 import com.gather.core.sheet.DefaultSheetBuilder;
-import com.gather.core.sheet.ISheetBuilder;
+import com.gather.core.sheet.ISheetCreator;
 import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +28,7 @@ public class ExcelBuilder {
             Workbook wb = new HSSFWorkbook();
 
             for (IDataTableModel model : models) {
-                ISheetBuilder sheetBuilder = new DefaultSheetBuilder(iteracionModel,
+                ISheetCreator sheetBuilder = new DefaultSheetBuilder(iteracionModel,
                                                                      model);
                 Sheet sheet = sheetBuilder.createSheet(wb);
 
