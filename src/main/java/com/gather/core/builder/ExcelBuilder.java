@@ -45,7 +45,7 @@ public class ExcelBuilder {
         }
     }
 
-    private ByteArrayOutputStream getStream() {
+    public ByteArrayOutputStream getStream() {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
         try {
