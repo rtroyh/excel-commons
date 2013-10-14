@@ -1,7 +1,7 @@
 package com.gather.core.sheet;
 
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +11,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  * To change this template use File | Settings | File Templates.
  */
 public interface ISheetCreator {
-    public Sheet createSheet(Workbook wb);
+    public XSSFSheet createSheet(XSSFWorkbook wb);
 
-    public Sheet getSheet();
+    public XSSFSheet getSheet();
 }

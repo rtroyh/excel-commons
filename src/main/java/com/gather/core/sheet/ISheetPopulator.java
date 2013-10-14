@@ -1,6 +1,6 @@
 package com.gather.core.sheet;
 
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,5 +10,5 @@ import org.apache.poi.ss.usermodel.Sheet;
  * Time: 12:19 PM
  */
 public interface ISheetPopulator {
-    public void populate(Sheet sheet);
+    public void populate(XSSFSheet sheet);
 }

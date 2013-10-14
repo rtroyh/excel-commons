@@ -3,7 +3,13 @@ package com.gather.core.sheet;
 import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.List;
 
@@ -16,19 +22,19 @@ import java.util.List;
  */
 public class BasicSheetPopulator implements ISheetPopulator {
     private IDataTableModel model;
-    private CellStyle cellStyleHeader;
+    private XSSFCellStyle cellStyleHeader;
 
     public BasicSheetPopulator(IDataTableModel model) {
         this.model = model;
     }
 
     @Override
-    public void populate(Sheet sheet) {
+    public void populate(XSSFSheet sheet) {
         short rowIndex = 0;
         short columnIndex = 0;
 
         final Row headerRow = sheet.createRow(rowIndex);
-        final CellStyle cellStyle = getCellStyleHeader(sheet.getWorkbook());
+        final XSSFCellStyle cellStyle = getCellStyleHeader(sheet.getWorkbook());
 
         for (List<Object> header : model.getHeaders()) {
             if (!header.get(1).equals(5) && header.get(4).equals(1)) {
@@ -43,7 +49,7 @@ public class BasicSheetPopulator implements ISheetPopulator {
         }
     }
 
-    private CellStyle getCellStyleHeader(Workbook wb) {
+    private XSSFCellStyle getCellStyleHeader(XSSFWorkbook wb) {
         if (this.cellStyleHeader == null) {
             this.cellStyleHeader = wb.createCellStyle();
             this.cellStyleHeader.setAlignment(CellStyle.ALIGN_CENTER);

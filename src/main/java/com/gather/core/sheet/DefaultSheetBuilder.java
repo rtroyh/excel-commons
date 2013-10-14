@@ -2,8 +2,8 @@ package com.gather.core.sheet;
 
 import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +15,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 public class DefaultSheetBuilder implements ISheetCreator {
     private IDataTableModel iteracionModel;
     private IDataTableModel model;
-    private Sheet sheet;
+    private XSSFSheet sheet;
 
     public DefaultSheetBuilder(IDataTableModel iteracionModel,
                                IDataTableModel model) {
@@ -23,12 +23,12 @@ public class DefaultSheetBuilder implements ISheetCreator {
         this.model = model;
     }
 
-    public Sheet getSheet() {
+    public XSSFSheet getSheet() {
         return sheet;
     }
 
     @Override
-    public Sheet createSheet(Workbook wb) {
+    public XSSFSheet createSheet(XSSFWorkbook wb) {
         sheet = null;
         if (Validator.validateList(model.getTitles())) {
             if (Validator.validateString(model.getTitles().get(0).get(4))) {

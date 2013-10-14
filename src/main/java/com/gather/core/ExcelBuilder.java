@@ -6,9 +6,10 @@ import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,12 +26,12 @@ public class ExcelBuilder {
     public ByteArrayOutputStream getExcelReport(IDataTableModel iteracionModel,
                                                 List<IDataTableModel> models) {
         if (iteracionModel != null && Validator.validateList(models)) {
-            Workbook wb = new HSSFWorkbook();
+            XSSFWorkbook wb = new XSSFWorkbook();
 
             for (IDataTableModel model : models) {
                 ISheetCreator sheetBuilder = new DefaultSheetBuilder(iteracionModel,
                                                                      model);
-                Sheet sheet = sheetBuilder.createSheet(wb);
+                XSSFSheet sheet = sheetBuilder.createSheet(wb);
 
                 if (sheet != null) {
                     this.populateSheet(iteracionModel,
