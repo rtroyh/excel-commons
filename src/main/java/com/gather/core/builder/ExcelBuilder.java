@@ -1,12 +1,13 @@
 package com.gather.core.builder;
 
-import com.gather.core.sheet.ISheetCreator;
-import com.gather.core.sheet.ISheetPopulator;
+import com.gather.core.sheet.ISheetBuilder;
 import com.gather.core.workbook.IWorkbookCreator;
 import org.apache.log4j.Logger;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,30 +19,23 @@ import java.io.IOException;
 public class ExcelBuilder {
     private static final Logger LOG = Logger.getLogger(ExcelBuilder.class);
 
-    private ISheetCreator sheetCreator;
     private IWorkbookCreator workbookCreator;
-    private ISheetPopulator bodySheetPopulator;
-    private ISheetPopulator headerSheetPopulator;
+    private List<ISheetBuilder> sheetBuilders;
 
-    public ExcelBuilder(ISheetCreator sheetCreator,
-                        IWorkbookCreator workbookCreator,
-                        ISheetPopulator bodySheetPopulator,
-                        ISheetPopulator headerSheetPopulator) {
-        this.sheetCreator = sheetCreator;
+    public ExcelBuilder(IWorkbookCreator workbookCreator,
+                        List<ISheetBuilder> sheetBuilders) {
         this.workbookCreator = workbookCreator;
-        this.bodySheetPopulator = bodySheetPopulator;
-        this.headerSheetPopulator = headerSheetPopulator;
+        this.sheetBuilders = sheetBuilders;
     }
 
     public void createExcel() {
-        if (sheetCreator != null && workbookCreator != null) {
+        if (workbookCreator != null) {
             workbookCreator.createWorkbook();
 
-            sheetCreator.createSheet(workbookCreator.getWorkbook());
-
-            headerSheetPopulator.populate(sheetCreator.getSheet());
-
-            bodySheetPopulator.populate(sheetCreator.getSheet());
+            for (ISheetBuilder sheetBuilder : sheetBuilders) {
+                XSSFSheet xssfSheet = sheetBuilder.createSheet(workbookCreator.getWorkbook());
+                sheetBuilder.populate(xssfSheet);
+            }
         }
     }
 

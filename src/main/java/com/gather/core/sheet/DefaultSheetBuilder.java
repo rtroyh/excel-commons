@@ -56,8 +56,9 @@ public class DefaultSheetBuilder implements ISheetCreator {
     private boolean existeMensaje(IDataTableModel iteracionModel) {
         boolean existeMensaje = false;
 
-        if (Validator.validateList(iteracionModel.getTitles().get(0),
-                                   9)) {
+
+        if (Validator.validateList(iteracionModel.getTitles()) && Validator.validateList(iteracionModel.getTitles().get(0),
+                                                                                         9)) {
             final Object mensaje = iteracionModel.getTitles().get(0).get(8);
             existeMensaje = Validator.validateString(mensaje);
         }

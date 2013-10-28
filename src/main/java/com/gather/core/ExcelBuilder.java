@@ -20,6 +20,7 @@ import java.util.List;
 public class ExcelBuilder {
     private static final Logger LOG = Logger.getLogger(ExcelBuilder.class);
 
+    private CellStyle cellStyleDate;
     private CellStyle cellStyleHeader;
     private CellStyle cellStylePorcentual;
 
@@ -69,8 +70,8 @@ public class ExcelBuilder {
     private boolean existeMensaje(IDataTableModel iteracionModel) {
         boolean existeMensaje = false;
 
-        if (Validator.validateList(iteracionModel.getTitles().get(0),
-                                   9)) {
+        if (Validator.validateList(iteracionModel.getTitles()) && Validator.validateList(iteracionModel.getTitles().get(0),
+                                                                                         9)) {
             final Object mensaje = getMensaje(iteracionModel);
             existeMensaje = Validator.validateString(mensaje);
         }
@@ -198,8 +199,6 @@ public class ExcelBuilder {
     private void buildSheetBody(IDataTableModel model,
                                 Sheet sheet,
                                 short y) {
-        CellStyle cellStylePorcentual = getCellStylePorcentual(sheet.getWorkbook());
-
         for (List<Object> row : model.getRows()) {
             Row eRow = sheet.createRow(y);
 
@@ -210,6 +209,7 @@ public class ExcelBuilder {
                 boolean esTexto = header.get(1).equals(1);
                 boolean esNumerico = header.get(1).equals(2);
                 boolean esPorcentual = header.get(1).equals(3);
+                boolean esFecha = header.get(1).equals(4);
                 boolean esImagen = header.get(1).equals(5);
 
                 if (!esImagen && esColumnaVisible) {
@@ -219,8 +219,9 @@ public class ExcelBuilder {
                         Cell cell = eRow.createCell(xExcel);
 
                         if (esPorcentual) {
-                            cell.setCellValue(Float.valueOf(o.toString()));
-                            cell.setCellStyle(cellStylePorcentual);
+                            cell.setCellStyle(getCellStylePorcentual(sheet.getWorkbook()));
+                        } else if (esFecha) {
+                            cell.setCellStyle(getCellStyleDate(sheet.getWorkbook()));
                         }
 
                         if (esNumerico || esPorcentual) {
@@ -260,6 +261,7 @@ public class ExcelBuilder {
 
             y++;
         }
+
     }
 
     private CellStyle getCellStylePorcentual(Workbook wb) {
@@ -269,5 +271,14 @@ public class ExcelBuilder {
         }
 
         return this.cellStylePorcentual;
+    }
+
+    private CellStyle getCellStyleDate(Workbook wb) {
+        if (this.cellStyleDate == null) {
+            this.cellStyleDate = wb.createCellStyle();
+            this.cellStyleDate.setDataFormat(wb.createDataFormat().getFormat("YYYY-MM-DD"));
+        }
+
+        return this.cellStyleDate;
     }
 }
