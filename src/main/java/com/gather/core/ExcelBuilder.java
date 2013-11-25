@@ -1,6 +1,6 @@
 package com.gather.core;
 
-import com.gather.core.sheet.DefaultSheetBuilder;
+import com.gather.core.sheet.OldDefaultSheetCreator;
 import com.gather.core.sheet.ISheetCreator;
 import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Time;
 import java.util.List;
 
 public class ExcelBuilder {
@@ -30,7 +31,7 @@ public class ExcelBuilder {
             XSSFWorkbook wb = new XSSFWorkbook();
 
             for (IDataTableModel model : models) {
-                ISheetCreator sheetBuilder = new DefaultSheetBuilder(iteracionModel,
+                ISheetCreator sheetBuilder = new OldDefaultSheetCreator(iteracionModel,
                                                                      model);
                 XSSFSheet sheet = sheetBuilder.createSheet(wb);
 
@@ -220,11 +221,19 @@ public class ExcelBuilder {
 
                         if (esPorcentual) {
                             cell.setCellStyle(getCellStylePorcentual(sheet.getWorkbook()));
-                        } else if (esFecha) {
-                            cell.setCellStyle(getCellStyleDate(sheet.getWorkbook()));
                         }
 
-                        if (esNumerico || esPorcentual) {
+                        if (esFecha) {
+                            if (o instanceof java.util.Date) {
+                                cell.setCellStyle(getCellStyleDate(sheet.getWorkbook()));
+                                cell.setCellValue((java.util.Date) o);
+                            } else if (o instanceof java.sql.Date) {
+                                cell.setCellStyle(getCellStyleDate(sheet.getWorkbook()));
+                                cell.setCellValue((java.sql.Date) o);
+                            } else if (o instanceof Time) {
+                                cell.setCellValue(o.toString());
+                            }
+                        } else if (esNumerico || esPorcentual) {
                             if (o instanceof Double) {
                                 cell.setCellValue((Double) o);
                             } else if (o instanceof Integer) {
@@ -261,7 +270,6 @@ public class ExcelBuilder {
 
             y++;
         }
-
     }
 
     private CellStyle getCellStylePorcentual(Workbook wb) {
