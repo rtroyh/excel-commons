@@ -1,8 +1,10 @@
 package com.gather.core.sheet;
 
 import com.gather.gathercommons.model.IDataTableModel;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.math.BigDecimal;
@@ -22,32 +24,12 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
     private Integer rowStart;
 
     private CellStyle cellStyleDate;
-    private CellStyle cellStyleHeader;
     private CellStyle cellStylePorcentual;
 
     public DefaultBodySheetPopulator(IDataTableModel model,
                                      Integer rowStart) {
         this.model = model;
         this.rowStart = rowStart;
-    }
-
-    private CellStyle getCellStyleHeader(Workbook wb) {
-        if (this.cellStyleHeader == null) {
-            this.cellStyleHeader = wb.createCellStyle();
-            this.cellStyleHeader.setAlignment(CellStyle.ALIGN_CENTER);
-            this.cellStyleHeader.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-            this.cellStyleHeader.setFillForegroundColor(HSSFColor.DARK_BLUE.index);
-            this.cellStyleHeader.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
-            Font font = wb.createFont();
-            font.setFontHeightInPoints((short) 11);
-            font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-            font.setColor(HSSFColor.WHITE.index);
-
-            this.cellStyleHeader.setFont(font);
-        }
-
-        return this.cellStyleHeader;
     }
 
     private CellStyle getCellStylePorcentual(Workbook wb) {
@@ -76,7 +58,7 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
             int xHeader = 0;
             int xExcel = 0;
             for (List<Object> header : model.getHeaders()) {
-                boolean esColumnaVisible = header.get(4).equals(1);
+                boolean esColumnaVisible = header.get(4).equals(1) || header.get(4).equals(3);
                 boolean esTexto = header.get(1).equals(1);
                 boolean esNumerico = header.get(1).equals(2);
                 boolean esPorcentual = header.get(1).equals(3);
