@@ -1,6 +1,7 @@
-package com.gather.core.sheet;
+package com.gather.excelcommons.sheet;
 
-import com.gather.core.sheet.creator.ISheetCreator;
+import com.gather.excelcommons.sheet.creator.ISheetCreator;
+import com.gather.excelcommons.sheet.populator.ISheetPopulator;
 
 /**
  * Created with IntelliJ IDEA.

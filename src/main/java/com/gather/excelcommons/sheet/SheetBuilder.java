@@ -1,6 +1,7 @@
-package com.gather.core.sheet;
+package com.gather.excelcommons.sheet;
 
-import com.gather.core.sheet.creator.ISheetCreator;
+import com.gather.excelcommons.sheet.creator.ISheetCreator;
+import com.gather.excelcommons.sheet.populator.ISheetPopulator;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -11,12 +12,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * Date: 10/28/13
  * Time: 10:50 AM
  */
-public class DefaultSheetBuilder implements ISheetBuilder {
+public class SheetBuilder implements ISheetBuilder {
     private ISheetCreator sheetCreator;
     private ISheetPopulator sheetPopulator;
 
-    public DefaultSheetBuilder(ISheetCreator sheetCreator,
-                               ISheetPopulator sheetPopulator) {
+    public SheetBuilder(ISheetCreator sheetCreator,
+                        ISheetPopulator sheetPopulator) {
         this.sheetCreator = sheetCreator;
         this.sheetPopulator = sheetPopulator;
     }

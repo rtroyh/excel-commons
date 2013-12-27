@@ -1,7 +1,7 @@
-package com.gather.core.builder;
+package com.gather.excelcommons.builder;
 
-import com.gather.core.sheet.ISheetBuilder;
-import com.gather.core.workbook.IWorkbookCreator;
+import com.gather.excelcommons.sheet.ISheetBuilder;
+import com.gather.excelcommons.workbook.IWorkbookCreator;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
@@ -29,6 +29,8 @@ public class ExcelBuilder {
     }
 
     public void createExcel() {
+        LOG.info("INICIO CONSTRUCCION ARCHIVO EXCEL");
+
         if (workbookCreator != null) {
             workbookCreator.createWorkbook();
 
@@ -37,6 +39,8 @@ public class ExcelBuilder {
                 sheetBuilder.populate(xssfSheet);
             }
         }
+
+        LOG.info("FIN CONSTRUCCION ARCHIVO EXCEL");
     }
 
     public ByteArrayOutputStream getStream() {

@@ -1,4 +1,4 @@
-package com.gather.core.workbook;
+package com.gather.excelcommons.workbook;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
