@@ -87,12 +87,12 @@ public class SuperBodySheetPopulator implements ISheetPopulator {
                         cell.setCellStyle(cellStyle);
 
                         if (esFecha) {
-                            if (o instanceof java.util.Date) {
-                                cell.setCellValue((java.util.Date) o);
+                            if (o instanceof Time) {
+                                cell.setCellValue(o.toString());
                             } else if (o instanceof java.sql.Date) {
                                 cell.setCellValue((java.sql.Date) o);
-                            } else if (o instanceof Time) {
-                                cell.setCellValue(o.toString());
+                            } else if (o instanceof java.util.Date) {
+                                cell.setCellValue((java.util.Date) o);
                             }
                         } else if (esNumerico || esPorcentual) {
                             if (o instanceof Double) {
