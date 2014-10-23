@@ -1,15 +1,15 @@
 package com.gather.excelcommons.sheet.populator;
 
 import com.gather.gathercommons.model.IDataTableModel;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
+import com.gather.gathercommons.util.Validator;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,11 +25,31 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
 
     private CellStyle cellStyleDate;
     private CellStyle cellStylePorcentual;
+    private List<CellStyle> cellStyles;
 
     public DefaultBodySheetPopulator(IDataTableModel model,
                                      Integer rowStart) {
         this.model = model;
         this.rowStart = rowStart;
+    }
+
+    private List<CellStyle> getCellStyles() {
+        if (cellStyles == null) {
+            cellStyles = Collections.synchronizedList(new ArrayList<CellStyle>());
+        }
+
+        return cellStyles;
+    }
+
+    private CellStyle getNumberCellStyle(final Workbook wb,
+                                         final Integer decimals) {
+        CellStyle cellStyle = wb.createCellStyle();
+
+        for (CellStyle style: this.getCellStyles()){
+
+        }
+
+        return cellStyle;
     }
 
     private CellStyle getCellStylePorcentual(Workbook wb) {
@@ -84,8 +104,12 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
                             } else if (o instanceof java.util.Date) {
                                 cell.setCellStyle(getCellStyleDate(sheet.getWorkbook()));
                                 cell.setCellValue((java.util.Date) o);
+                            } else if (o instanceof Number) {
+
                             }
                         } else if (esNumerico || esPorcentual) {
+                            final int numeroDecimales = Validator.validateNumber(header.get(2)) ? (Integer) header.get(2) : 0;
+
                             if (o instanceof Double) {
                                 cell.setCellValue((Double) o);
                             } else if (o instanceof Integer) {
