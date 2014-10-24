@@ -45,7 +45,7 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
                                          final Integer decimals) {
         CellStyle cellStyle = wb.createCellStyle();
 
-        for (CellStyle style: this.getCellStyles()){
+        for (CellStyle style : this.getCellStyles()) {
 
         }
 
