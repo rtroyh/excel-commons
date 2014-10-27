@@ -24,7 +24,7 @@ public class NumberCellStyle {
     }
 
     private void buildFormat() {
-        LOG.info("INICIO CONSTRUCCION FORMATO");
+        LOG.debug("INICIO CONSTRUCCION FORMATO");
         StringBuilder builder;
 
         if (decimalCount == 0) {

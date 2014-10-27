@@ -54,13 +54,12 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
 
     private CellStyle getNumberCellStyle(final Workbook wb,
                                          final Integer decimals) {
-        LOG.info("INICIO OBTENCION ESTILO PARA CELDA NUMERICA");
+        LOG.debug("INICIO OBTENCION ESTILO PARA CELDA NUMERICA");
 
         Boolean exists = false;
 
         for (NumberCellStyle numberCellStyle : this.getNumberCellStyles()) {
             if (numberCellStyle.getDecimalCount().equals(decimals)) {
-                LOG.info("EXISTE");
                 exists = true;
             }
 
@@ -70,7 +69,6 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
         }
 
         if (!exists) {
-            LOG.info("NO EXISTE");
             CellStyle cellStyle = wb.createCellStyle();
 
             NumberCellStyle numberCellStyle = new NumberCellStyle(cellStyle,
