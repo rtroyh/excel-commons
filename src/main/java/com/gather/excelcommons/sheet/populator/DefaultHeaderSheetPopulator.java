@@ -59,7 +59,7 @@ public class DefaultHeaderSheetPopulator implements ISheetPopulator {
         final CellStyle cellStyle = getCellStyleHeader(sheet.getWorkbook());
 
         for (List<Object> header : model.getHeaders()) {
-            if (!header.get(1).equals(5) && (header.get(4).equals(1) || header.get(4).equals(3))) {
+            if (!header.get(1).equals(5) && (header.get(4).equals(2) || header.get(4).equals(3))) {
                 Cell cell = headerRow.createCell(columnIndex);
                 cell.setCellStyle(cellStyle);
 

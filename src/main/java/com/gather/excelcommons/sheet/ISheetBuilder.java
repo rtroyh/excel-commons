@@ -12,5 +12,4 @@ import com.gather.excelcommons.sheet.populator.ISheetPopulator;
  */
 public interface ISheetBuilder extends ISheetPopulator,
                                        ISheetCreator {
-
 }

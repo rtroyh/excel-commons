@@ -111,7 +111,7 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
             int xHeader = 0;
             int xExcel = 0;
             for (List<Object> header : model.getHeaders()) {
-                boolean esColumnaVisible = header.get(4).equals(1) || header.get(4).equals(3);
+                boolean esColumnaVisible = header.get(4).equals(2) || header.get(4).equals(3);
                 boolean esTexto = header.get(1).equals(1);
                 boolean esNumerico = header.get(1).equals(2);
                 boolean esPorcentual = header.get(1).equals(3);
