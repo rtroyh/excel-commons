@@ -1,14 +1,13 @@
 package com.gather.excelcommons.sheet.populator;
 
+import com.gather.excelcommons.sheet.populator.style.NumberCellStyle;
 import com.gather.excelcommons.sheet.util.CellUtil;
 import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,12 +20,15 @@ import java.util.List;
  * Time: 4:18 PM
  */
 public class DefaultBodySheetPopulator implements ISheetPopulator {
+    private static final Logger LOG = Logger.getLogger(DefaultBodySheetPopulator.class);
+
     private IDataTableModel model;
     private Integer rowStart;
 
+    private DataFormat dataFormat;
     private CellStyle cellStyleDate;
     private CellStyle cellStylePorcentual;
-    private List<CellStyle> cellStyles;
+    private List<NumberCellStyle> numberCellStyles;
 
     public DefaultBodySheetPopulator(IDataTableModel model,
                                      Integer rowStart) {
@@ -34,23 +36,53 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
         this.rowStart = rowStart;
     }
 
-    private List<CellStyle> getCellStyles() {
-        if (cellStyles == null) {
-            cellStyles = Collections.synchronizedList(new ArrayList<CellStyle>());
+    private DataFormat getDataFormat(final Workbook wb) {
+        if (dataFormat == null) {
+            dataFormat = wb.createDataFormat();
         }
 
-        return cellStyles;
+        return dataFormat;
+    }
+
+    private List<NumberCellStyle> getNumberCellStyles() {
+        if (numberCellStyles == null) {
+            numberCellStyles = Collections.synchronizedList(new ArrayList<NumberCellStyle>());
+        }
+
+        return numberCellStyles;
     }
 
     private CellStyle getNumberCellStyle(final Workbook wb,
                                          final Integer decimals) {
-        CellStyle cellStyle = wb.createCellStyle();
+        LOG.info("INICIO OBTENCION ESTILO PARA CELDA NUMERICA");
 
-        for (CellStyle style : this.getCellStyles()) {
+        Boolean exists = false;
 
+        for (NumberCellStyle numberCellStyle : this.getNumberCellStyles()) {
+            if (numberCellStyle.getDecimalCount().equals(decimals)) {
+                LOG.info("EXISTE");
+                exists = true;
+            }
+
+            if (exists) {
+                return numberCellStyle.getCellStyle();
+            }
         }
 
-        return cellStyle;
+        if (!exists) {
+            LOG.info("NO EXISTE");
+            CellStyle cellStyle = wb.createCellStyle();
+
+            NumberCellStyle numberCellStyle = new NumberCellStyle(cellStyle,
+                                                                  this.getDataFormat(wb),
+                                                                  decimals);
+
+            this.getNumberCellStyles().add(numberCellStyle);
+
+            return numberCellStyle.getCellStyle();
+        }
+
+        return wb.createCellStyle();
     }
 
     private CellStyle getCellStylePorcentual(Workbook wb) {
@@ -73,6 +105,8 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
 
     @Override
     public void populate(XSSFSheet sheet) {
+        LOG.info("INICIO POBLAMIENTO SHEET");
+
         for (List<Object> row : model.getRows()) {
             Row eRow = sheet.createRow(rowStart);
 
@@ -93,19 +127,29 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
                         Cell cell = eRow.createCell(xExcel);
 
                         if (esPorcentual) {
+                            LOG.debug("CELDA PORCENTUAL");
                             cell.setCellStyle(getCellStylePorcentual(sheet.getWorkbook()));
                             CellUtil.setNumberValue(o,
                                                     cell);
                         } else if (esFecha) {
+                            LOG.debug("CELDA FECHA");
                             CellUtil.setDateValue(o,
                                                   cell,
                                                   getCellStyleDate(sheet.getWorkbook()));
                         } else if (esNumerico) {
-                            final int numeroDecimales = Validator.validateNumber(header.get(2)) ? (Integer) header.get(2) : 0;
+                            LOG.debug("CELDA NUMERICA");
 
+                            final int decimals = Validator.validateNumber(header.get(2)) ? (Integer) header.get(2) : 0;
+
+                            cell.setCellStyle(getNumberCellStyle(sheet.getWorkbook(),
+                                                                 decimals));
                             CellUtil.setNumberValue(o,
                                                     cell);
+
+
                         } else if (esTexto) {
+                            LOG.debug("CELDA TEXTO");
+
                             CellUtil.setStringValue(o,
                                                     cell);
                         }

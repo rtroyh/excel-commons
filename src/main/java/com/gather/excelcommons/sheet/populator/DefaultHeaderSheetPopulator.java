@@ -2,6 +2,7 @@ package com.gather.excelcommons.sheet.populator;
 
 import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -16,6 +17,8 @@ import java.util.List;
  * Time: 6:26 PM
  */
 public class DefaultHeaderSheetPopulator implements ISheetPopulator {
+    private static final Logger LOG = Logger.getLogger(DefaultHeaderSheetPopulator.class);
+
     private IDataTableModel model;
     private Integer rowStart;
     private CellStyle cellStyleHeader;
@@ -47,6 +50,8 @@ public class DefaultHeaderSheetPopulator implements ISheetPopulator {
 
     @Override
     public void populate(XSSFSheet sheet) {
+        LOG.info("INICIO POBLAMIENTO SHEET");
+
         short columnIndex = 0;
 
         Row headerRow = sheet.createRow(rowStart);
