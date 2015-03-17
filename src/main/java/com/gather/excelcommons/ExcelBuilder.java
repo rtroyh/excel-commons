@@ -32,7 +32,7 @@ public class ExcelBuilder {
 
             for (IDataTableModel model : models) {
                 ISheetCreator sheetBuilder = new OldDefaultSheetCreator(iteracionModel,
-                                                                     model);
+                                                                        model);
                 XSSFSheet sheet = sheetBuilder.createSheet(wb);
 
                 if (sheet != null) {

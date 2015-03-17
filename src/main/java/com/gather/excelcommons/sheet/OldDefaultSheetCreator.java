@@ -3,6 +3,7 @@ package com.gather.excelcommons.sheet;
 import com.gather.excelcommons.sheet.creator.ISheetCreator;
 import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
+import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -14,6 +15,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * To change this template use File | Settings | File Templates.
  */
 public class OldDefaultSheetCreator implements ISheetCreator {
+    private static final Logger LOG = Logger.getLogger(OldDefaultSheetCreator.class);
+
     private IDataTableModel iteracionModel;
     private IDataTableModel model;
     private XSSFSheet sheet;
@@ -36,6 +39,7 @@ public class OldDefaultSheetCreator implements ISheetCreator {
                 String name = model.getTitles().get(0).get(4).toString();
                 name = name.replaceAll("/",
                                        " ");
+                LOG.info("Nombre sheet: " + name);
                 sheet = wb.createSheet(name);
             }
 
