@@ -7,9 +7,8 @@ import com.gather.gathercommons.util.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.xssf.usermodel.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,9 +20,9 @@ import java.util.List;
 public class ExcelBuilder {
     private static final Logger LOG = Logger.getLogger(ExcelBuilder.class);
 
-    private CellStyle cellStyleDate;
-    private CellStyle cellStyleHeader;
-    private CellStyle cellStylePorcentual;
+    private XSSFCellStyle cellStyleDate;
+    private XSSFCellStyle cellStyleHeader;
+    private XSSFCellStyle cellStylePorcentual;
 
     public ByteArrayOutputStream getExcelReport(IDataTableModel iteracionModel,
                                                 List<IDataTableModel> models) {
@@ -50,18 +49,18 @@ public class ExcelBuilder {
 
     private void populateSheet(IDataTableModel iteracionModel,
                                IDataTableModel model,
-                               Sheet sheet) {
+                               XSSFSheet sheet) {
         this.buildSheetHeader(iteracionModel,
                               model,
                               sheet);
 
-        short y = 1;
+        int y = 1;
 
         boolean existeMensaje = existeMensaje(iteracionModel);
 
         this.buildSheetBody(model,
                             sheet,
-                            existeMensaje ? (short) (y + 2) : y);
+                            existeMensaje ? (y + 2) : y);
 
         for (short x = 0; x < model.getHeaders().size() + 2; x++) {
             sheet.autoSizeColumn(x);
@@ -84,7 +83,7 @@ public class ExcelBuilder {
         return iteracionModel.getTitles().get(0).get(8).toString();
     }
 
-    private ByteArrayOutputStream buildStream(Workbook wb) {
+    private ByteArrayOutputStream buildStream(XSSFWorkbook wb) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
         try {
@@ -100,8 +99,8 @@ public class ExcelBuilder {
 
     private void buildSheetHeader(IDataTableModel iteracionModel,
                                   IDataTableModel model,
-                                  Sheet sheet) {
-        short rowIndex = 0;
+                                  XSSFSheet sheet) {
+        int rowIndex = 0;
         short columnIndex = 0;
         boolean existeMensaje = this.existeMensaje(iteracionModel);
 
@@ -112,13 +111,13 @@ public class ExcelBuilder {
                                      columnIndex);
         }
 
-        Row headerRow = sheet.createRow(rowIndex);
+        XSSFRow headerRow = sheet.createRow(rowIndex);
 
-        final CellStyle cellStyle = getCellStyleHeader(sheet.getWorkbook());
+        final XSSFCellStyle cellStyle = getCellStyleHeader(sheet.getWorkbook());
 
         for (List<Object> header : model.getHeaders()) {
             if (!header.get(1).equals(5) && header.get(4).equals(1)) {
-                Cell cell = headerRow.createCell(columnIndex);
+                XSSFCell cell = headerRow.createCell(columnIndex);
                 cell.setCellStyle(cellStyle);
 
                 String title = Validator.validateString(header.get(0)) ? header.get(0).toString() : " ";
@@ -129,23 +128,23 @@ public class ExcelBuilder {
         }
     }
 
-    private short createMensaje(IDataTableModel iteracionModel,
-                                Sheet sheet,
-                                short rowIndex,
-                                short columnIndex) {
+    private int createMensaje(IDataTableModel iteracionModel,
+                              XSSFSheet sheet,
+                              int rowIndex,
+                              short columnIndex) {
         final String frase = this.getMensaje(iteracionModel);
         final String[] strings = StringUtils.split(frase,
                                                    "|");
 
-        Row headerRow = sheet.createRow(rowIndex);
+        XSSFRow headerRow = sheet.createRow(rowIndex);
 
-        Cell cell = this.createCell(sheet.getWorkbook(),
-                                    headerRow,
-                                    columnIndex,
-                                    CellStyle.ALIGN_LEFT,
-                                    CellStyle.VERTICAL_TOP);
+        XSSFCell cell = this.createCell(sheet.getWorkbook(),
+                                        headerRow,
+                                        columnIndex,
+                                        XSSFCellStyle.ALIGN_LEFT,
+                                        XSSFCellStyle.VERTICAL_TOP);
 
-        final CellStyle cellStyle = cell.getCellStyle();
+        final XSSFCellStyle cellStyle = cell.getCellStyle();
         Font font = sheet.getWorkbook().createFont();
         font.setFontHeightInPoints((short) 11);
         font.setBoldweight(Font.BOLDWEIGHT_NORMAL);
@@ -161,16 +160,17 @@ public class ExcelBuilder {
         cell.setCellValue(stringBuilder.toString());
         rowIndex++;
         rowIndex++;
+
         return rowIndex;
     }
 
-    private CellStyle getCellStyleHeader(Workbook wb) {
+    private XSSFCellStyle getCellStyleHeader(XSSFWorkbook wb) {
         if (this.cellStyleHeader == null) {
             this.cellStyleHeader = wb.createCellStyle();
-            this.cellStyleHeader.setAlignment(CellStyle.ALIGN_CENTER);
-            this.cellStyleHeader.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+            this.cellStyleHeader.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+            this.cellStyleHeader.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
             this.cellStyleHeader.setFillForegroundColor(HSSFColor.DARK_BLUE.index);
-            this.cellStyleHeader.setFillPattern(CellStyle.SOLID_FOREGROUND);
+            this.cellStyleHeader.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
 
             Font font = wb.createFont();
             font.setFontHeightInPoints((short) 11);
@@ -183,13 +183,13 @@ public class ExcelBuilder {
         return this.cellStyleHeader;
     }
 
-    private Cell createCell(Workbook wb,
-                            Row row,
-                            short column,
-                            short halign,
-                            short valign) {
-        Cell cell = row.createCell(column);
-        CellStyle cellStyle = wb.createCellStyle();
+    private XSSFCell createCell(XSSFWorkbook wb,
+                                XSSFRow row,
+                                short column,
+                                short halign,
+                                short valign) {
+        XSSFCell cell = row.createCell(column);
+        XSSFCellStyle cellStyle = wb.createCellStyle();
         cellStyle.setAlignment(halign);
         cellStyle.setVerticalAlignment(valign);
         cell.setCellStyle(cellStyle);
@@ -198,10 +198,11 @@ public class ExcelBuilder {
     }
 
     private void buildSheetBody(IDataTableModel model,
-                                Sheet sheet,
-                                short y) {
+                                XSSFSheet sheet,
+                                int y) {
         for (List<Object> row : model.getRows()) {
-            Row eRow = sheet.createRow(y);
+            LOG.info("Fila n: " + y);
+            XSSFRow eRow = sheet.createRow(y);
 
             int xHeader = 0;
             int xExcel = 0;
@@ -217,21 +218,21 @@ public class ExcelBuilder {
                     Object o = row.get(xHeader);
 
                     if (o != null) {
-                        Cell cell = eRow.createCell(xExcel);
+                        XSSFCell cell = eRow.createCell(xExcel);
 
                         if (esPorcentual) {
                             cell.setCellStyle(getCellStylePorcentual(sheet.getWorkbook()));
                         }
 
                         if (esFecha) {
-                            if (o instanceof java.util.Date) {
-                                cell.setCellStyle(getCellStyleDate(sheet.getWorkbook()));
-                                cell.setCellValue((java.util.Date) o);
-                            } else if (o instanceof java.sql.Date) {
+                            if (o instanceof java.sql.Date) {
                                 cell.setCellStyle(getCellStyleDate(sheet.getWorkbook()));
                                 cell.setCellValue((java.sql.Date) o);
                             } else if (o instanceof Time) {
                                 cell.setCellValue(o.toString());
+                            } else if (o instanceof java.util.Date) {
+                                cell.setCellStyle(getCellStyleDate(sheet.getWorkbook()));
+                                cell.setCellValue((java.util.Date) o);
                             }
                         } else if (esNumerico || esPorcentual) {
                             if (o instanceof Double) {
@@ -272,7 +273,7 @@ public class ExcelBuilder {
         }
     }
 
-    private CellStyle getCellStylePorcentual(Workbook wb) {
+    private XSSFCellStyle getCellStylePorcentual(XSSFWorkbook wb) {
         if (this.cellStylePorcentual == null) {
             this.cellStylePorcentual = wb.createCellStyle();
             this.cellStylePorcentual.setDataFormat(wb.createDataFormat().getFormat("0.00%"));
@@ -281,7 +282,7 @@ public class ExcelBuilder {
         return this.cellStylePorcentual;
     }
 
-    private CellStyle getCellStyleDate(Workbook wb) {
+    private XSSFCellStyle getCellStyleDate(XSSFWorkbook wb) {
         if (this.cellStyleDate == null) {
             this.cellStyleDate = wb.createCellStyle();
             this.cellStyleDate.setDataFormat(wb.createDataFormat().getFormat("YYYY-MM-DD"));
