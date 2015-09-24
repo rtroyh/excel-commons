@@ -2,8 +2,8 @@ package com.gather.excelcommons.sheet;
 
 import com.gather.excelcommons.sheet.creator.ISheetCreator;
 import com.gather.excelcommons.sheet.populator.ISheetPopulator;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,17 +23,17 @@ public class SheetBuilder implements ISheetBuilder {
     }
 
     @Override
-    public XSSFSheet createSheet(XSSFWorkbook wb) {
+    public Sheet createSheet(Workbook wb) {
         return sheetCreator.createSheet(wb);
     }
 
     @Override
-    public XSSFSheet getSheet() {
+    public Sheet getSheet() {
         return sheetCreator.getSheet();
     }
 
     @Override
-    public void populate(XSSFSheet sheet) {
+    public void populate(Sheet sheet) {
         sheetPopulator.populate(sheet);
     }
 }

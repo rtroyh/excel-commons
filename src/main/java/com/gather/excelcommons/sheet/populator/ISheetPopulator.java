@@ -1,6 +1,6 @@
 package com.gather.excelcommons.sheet.populator;
 
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,5 +10,5 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
  * Time: 12:19 PM
  */
 public interface ISheetPopulator {
-    public void populate(XSSFSheet sheet);
+    public void populate(Sheet sheet);
 }

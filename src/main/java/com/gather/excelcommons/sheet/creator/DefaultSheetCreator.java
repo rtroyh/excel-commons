@@ -1,32 +1,33 @@
 package com.gather.excelcommons.sheet.creator;
 
 import com.gather.gathercommons.util.Validator;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.util.List;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * Created by rodrigotroy on 10/27/14.
  */
 public class DefaultSheetCreator implements ISheetCreator {
-    private XSSFSheet sheet;
+    private Sheet sheet;
     private Object sheetName;
-    private Integer zoom;
+    private Integer zoomNumerator;
+    private Integer zoomDenominator;
 
     public DefaultSheetCreator(Object sheetName,
-                               Integer zoom) {
+                               Integer zoomNumerator,
+                               Integer zoomDenominator) {
         this.sheetName = sheetName;
-        this.zoom = zoom;
+        this.zoomNumerator = zoomNumerator;
+        this.zoomDenominator = zoomDenominator;
     }
 
     public DefaultSheetCreator(Object sheetName) {
         this.sheetName = sheetName;
-        this.zoom = 100;
+        this.zoomNumerator = this.zoomDenominator = 1;
     }
 
     @Override
-    public XSSFSheet createSheet(XSSFWorkbook workbook) {
+    public Sheet createSheet(Workbook workbook) {
         if (Validator.validateString(sheetName)) {
             String name = sheetName.toString();
             name = name.replaceAll("/",
@@ -40,13 +41,14 @@ public class DefaultSheetCreator implements ISheetCreator {
             this.sheet = workbook.createSheet();
         }
 
-        this.sheet.setZoom(zoom);
+        this.sheet.setZoom(zoomNumerator,
+                           zoomDenominator);
 
         return sheet;
     }
 
     @Override
-    public final XSSFSheet getSheet() {
+    public final Sheet getSheet() {
         return this.sheet;
     }
 }

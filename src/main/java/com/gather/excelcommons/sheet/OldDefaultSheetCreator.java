@@ -4,8 +4,8 @@ import com.gather.excelcommons.sheet.creator.ISheetCreator;
 import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
 import org.apache.log4j.Logger;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,7 +19,7 @@ public class OldDefaultSheetCreator implements ISheetCreator {
 
     private IDataTableModel iteracionModel;
     private IDataTableModel model;
-    private XSSFSheet sheet;
+    private Sheet sheet;
 
     public OldDefaultSheetCreator(IDataTableModel iteracionModel,
                                   IDataTableModel model) {
@@ -27,12 +27,12 @@ public class OldDefaultSheetCreator implements ISheetCreator {
         this.model = model;
     }
 
-    public XSSFSheet getSheet() {
+    public Sheet getSheet() {
         return sheet;
     }
 
     @Override
-    public XSSFSheet createSheet(XSSFWorkbook wb) {
+    public Sheet createSheet(Workbook wb) {
         sheet = null;
         if (Validator.validateList(model.getTitles())) {
             if (Validator.validateString(model.getTitles().get(0).get(4))) {

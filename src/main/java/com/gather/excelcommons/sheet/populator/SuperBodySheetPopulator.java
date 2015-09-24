@@ -1,11 +1,7 @@
 package com.gather.excelcommons.sheet.populator;
 
 import com.gather.gathercommons.model.IDataTableModel;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.ss.usermodel.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -51,7 +47,7 @@ public class SuperBodySheetPopulator implements ISheetPopulator {
     }
 
     @Override
-    public void populate(XSSFSheet sheet) {
+    public void populate(Sheet sheet) {
         int headerTotalIndex = 0;
         int headerVisibleIndex = 0;
         for (List<Object> header : model.getHeaders()) {

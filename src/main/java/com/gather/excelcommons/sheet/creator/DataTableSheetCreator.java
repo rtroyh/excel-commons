@@ -2,8 +2,8 @@ package com.gather.excelcommons.sheet.creator;
 
 import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.List;
 
@@ -14,16 +14,16 @@ import java.util.List;
  * Date: 11/25/13
  * Time: 6:19 PM
  */
-public class DataTableSheetCreator implements ISheetCreator{
+public class DataTableSheetCreator implements ISheetCreator {
     private IDataTableModel model;
-    private XSSFSheet sheet;
+    private Sheet sheet;
 
     public DataTableSheetCreator(IDataTableModel model) {
         this.model = model;
     }
 
     @Override
-    public XSSFSheet createSheet(XSSFWorkbook workbook) {
+    public Sheet createSheet(Workbook workbook) {
         if (Validator.validateDataTableModel(model)) {
             final List<List<Object>> titles = model.getTitles();
 
@@ -45,13 +45,14 @@ public class DataTableSheetCreator implements ISheetCreator{
             this.sheet = workbook.createSheet();
         }
 
-        this.sheet.setZoom(75);
+        this.sheet.setZoom(3,
+                           4);
 
         return sheet;
     }
 
     @Override
-    public XSSFSheet getSheet() {
+    public Sheet getSheet() {
         return this.sheet;
     }
 }

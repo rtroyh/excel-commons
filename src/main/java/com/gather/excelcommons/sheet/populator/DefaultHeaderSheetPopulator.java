@@ -5,7 +5,6 @@ import com.gather.gathercommons.util.Validator;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class DefaultHeaderSheetPopulator implements ISheetPopulator {
     }
 
     @Override
-    public void populate(XSSFSheet sheet) {
+    public void populate(Sheet sheet) {
         LOG.info("INICIO POBLAMIENTO SHEET");
 
         short columnIndex = 0;

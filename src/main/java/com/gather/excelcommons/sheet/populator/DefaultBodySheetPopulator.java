@@ -6,7 +6,6 @@ import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -102,7 +101,7 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
     }
 
     @Override
-    public void populate(XSSFSheet sheet) {
+    public void populate(Sheet sheet) {
         LOG.info("INICIO POBLAMIENTO SHEET");
 
         for (List<Object> row : model.getRows()) {

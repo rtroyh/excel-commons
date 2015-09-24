@@ -1,6 +1,6 @@
 package com.gather.excelcommons.sheet.populator;
 
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,7 +20,7 @@ public class CompleteSheetPopulator implements ISheetPopulator {
     }
 
     @Override
-    public void populate(XSSFSheet sheet) {
+    public void populate(Sheet sheet) {
         header.populate(sheet);
         body.populate(sheet);
     }

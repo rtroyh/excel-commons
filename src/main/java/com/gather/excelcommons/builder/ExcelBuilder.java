@@ -3,7 +3,7 @@ package com.gather.excelcommons.builder;
 import com.gather.excelcommons.sheet.ISheetBuilder;
 import com.gather.excelcommons.workbook.IWorkbookCreator;
 import org.apache.log4j.Logger;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.ss.usermodel.Sheet;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,8 +35,8 @@ public class ExcelBuilder {
             workbookCreator.createWorkbook();
 
             for (ISheetBuilder sheetBuilder : sheetBuilders) {
-                XSSFSheet xssfSheet = sheetBuilder.createSheet(workbookCreator.getWorkbook());
-                sheetBuilder.populate(xssfSheet);
+                Sheet sheet = sheetBuilder.createSheet(workbookCreator.getWorkbook());
+                sheetBuilder.populate(sheet);
             }
         }
 
