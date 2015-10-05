@@ -1,6 +1,6 @@
 package com.gather.excelcommons.workbook;
 
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,7 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * Time: 10:45 AM
  */
 public interface IWorkbookCreator {
-    public XSSFWorkbook createWorkbook();
+    public Workbook createWorkbook();
 
-    public XSSFWorkbook getWorkbook();
+    public Workbook getWorkbook();
 }
