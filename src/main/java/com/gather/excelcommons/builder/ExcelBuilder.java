@@ -32,8 +32,6 @@ public class ExcelBuilder {
         LOG.info("INICIO CONSTRUCCION ARCHIVO EXCEL");
 
         if (workbookCreator != null) {
-            workbookCreator.createWorkbook();
-
             for (ISheetBuilder sheetBuilder : sheetBuilders) {
                 Sheet sheet = sheetBuilder.createSheet(workbookCreator.getWorkbook());
                 sheetBuilder.populate(sheet);
@@ -49,8 +47,6 @@ public class ExcelBuilder {
         try {
             workbookCreator.getWorkbook().write(os);
         } catch (IOException e) {
-            LOG.error(e.getMessage());
-        } catch (Exception e) {
             LOG.error(e.getMessage());
         }
 

@@ -10,9 +10,5 @@ import org.apache.poi.ss.usermodel.Workbook;
  * Time: 10:45 AM
  */
 public interface IWorkbookCreator {
-    Workbook createWorkbook(String Author);
-
-    Workbook createWorkbook();
-
     Workbook getWorkbook();
 }
