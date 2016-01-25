@@ -160,5 +160,9 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
 
             rowStart++;
         }
+
+        for (int x = 0; x < model.getHeaders().size(); x++) {
+            sheet.autoSizeColumn(x);
+        }
     }
 }

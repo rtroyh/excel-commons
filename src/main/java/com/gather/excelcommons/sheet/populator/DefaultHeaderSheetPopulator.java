@@ -70,8 +70,10 @@ public class DefaultHeaderSheetPopulator implements ISheetPopulator {
         }
 
         sheet.createFreezePane(0,
-                               rowStart,
-                               0,
-                               rowStart);
+                               1);
+
+        for (int x = 0; x < model.getHeaders().size(); x++) {
+            sheet.autoSizeColumn(x);
+        }
     }
 }
