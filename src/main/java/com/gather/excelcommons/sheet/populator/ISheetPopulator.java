@@ -10,5 +10,6 @@ import org.apache.poi.ss.usermodel.Sheet;
  * Time: 12:19 PM
  */
 public interface ISheetPopulator {
-    public void populate(Sheet sheet);
+    void populate(Sheet sheet) throws
+                               Exception;
 }

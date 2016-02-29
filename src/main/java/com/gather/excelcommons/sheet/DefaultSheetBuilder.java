@@ -33,7 +33,8 @@ public class DefaultSheetBuilder implements ISheetBuilder {
     }
 
     @Override
-    public void populate(Sheet sheet) {
+    public void populate(Sheet sheet) throws
+                                      Exception {
         sheetPopulator.populate(sheet);
     }
 }

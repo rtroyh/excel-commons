@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -28,7 +27,8 @@ public class ExcelBuilder {
         this.sheetBuilders = sheetBuilders;
     }
 
-    public void createExcel() {
+    public void createExcel() throws
+                              Exception {
         LOG.info("INICIO CONSTRUCCION ARCHIVO EXCEL");
 
         if (workbookCreator != null) {
@@ -41,14 +41,10 @@ public class ExcelBuilder {
         LOG.info("FIN CONSTRUCCION ARCHIVO EXCEL");
     }
 
-    public ByteArrayOutputStream getStream() {
+    public ByteArrayOutputStream getStream() throws
+                                             Exception {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-
-        try {
-            workbookCreator.getWorkbook().write(os);
-        } catch (IOException e) {
-            LOG.error(e.getMessage());
-        }
+        workbookCreator.getWorkbook().write(os);
 
         return os;
     }

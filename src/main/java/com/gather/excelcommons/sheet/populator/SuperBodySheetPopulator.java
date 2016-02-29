@@ -125,7 +125,6 @@ public class SuperBodySheetPopulator implements ISheetPopulator {
             } else {
                 headerTotalIndex++;
             }
-
         }
     }
 }

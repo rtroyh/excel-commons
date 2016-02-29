@@ -20,7 +20,8 @@ public class CompleteSheetPopulator implements ISheetPopulator {
     }
 
     @Override
-    public void populate(Sheet sheet) {
+    public void populate(Sheet sheet) throws
+                                      Exception {
         header.populate(sheet);
         body.populate(sheet);
     }

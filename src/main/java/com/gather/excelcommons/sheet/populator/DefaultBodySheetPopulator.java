@@ -101,7 +101,8 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
     }
 
     @Override
-    public void populate(Sheet sheet) {
+    public void populate(Sheet sheet) throws
+                                      Exception {
         LOG.info("INICIO POBLAMIENTO SHEET");
 
         for (List<Object> row : model.getRows()) {

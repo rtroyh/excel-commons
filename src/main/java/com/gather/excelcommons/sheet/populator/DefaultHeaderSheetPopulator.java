@@ -48,7 +48,8 @@ public class DefaultHeaderSheetPopulator implements ISheetPopulator {
     }
 
     @Override
-    public void populate(Sheet sheet) {
+    public void populate(Sheet sheet) throws
+                                      Exception {
         LOG.info("INICIO POBLAMIENTO SHEET");
 
         short columnIndex = 0;

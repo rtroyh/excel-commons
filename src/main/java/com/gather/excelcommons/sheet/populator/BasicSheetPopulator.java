@@ -22,7 +22,8 @@ public class BasicSheetPopulator implements ISheetPopulator {
     }
 
     @Override
-    public void populate(Sheet sheet) {
+    public void populate(Sheet sheet) throws
+                                      Exception {
         short rowIndex = 0;
         short columnIndex = 0;
 
