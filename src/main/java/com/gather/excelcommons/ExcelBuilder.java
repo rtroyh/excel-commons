@@ -200,7 +200,7 @@ public class ExcelBuilder {
                                 Sheet sheet,
                                 int y) {
         for (List<Object> row : model.getRows()) {
-            LOG.info("Fila n: " + y);
+            LOG.debug("Fila n: " + y);
             Row eRow = sheet.createRow(y);
 
             int xHeader = 0;
