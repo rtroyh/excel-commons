@@ -45,8 +45,7 @@ public class DataTableSheetCreator implements ISheetCreator {
             this.sheet = workbook.createSheet();
         }
 
-        this.sheet.setZoom(3,
-                           4);
+        this.sheet.setZoom(75);
 
         return sheet;
     }

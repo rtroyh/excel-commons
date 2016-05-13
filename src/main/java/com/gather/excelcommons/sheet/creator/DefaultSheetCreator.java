@@ -41,8 +41,7 @@ public class DefaultSheetCreator implements ISheetCreator {
             this.sheet = workbook.createSheet();
         }
 
-        this.sheet.setZoom(zoomNumerator,
-                           zoomDenominator);
+        this.sheet.setZoom(100);
 
         return sheet;
     }

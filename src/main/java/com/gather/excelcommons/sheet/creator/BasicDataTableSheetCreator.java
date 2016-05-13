@@ -48,8 +48,7 @@ public class BasicDataTableSheetCreator implements ISheetCreator {
             this.sheet = workbook.createSheet();
         }
 
-        this.sheet.setZoom(1,
-                           1);
+        this.sheet.setZoom(100);
 
         return sheet;
     }
