@@ -1,5 +1,6 @@
 package com.gather.excelcommons;
 
+import com.gather.excelcommons.cell.CellUtil;
 import com.gather.excelcommons.sheet.OldDefaultSheetCreator;
 import com.gather.excelcommons.sheet.creator.ISheetCreator;
 import com.gather.gathercommons.model.IDataTableModel;
@@ -11,17 +12,21 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.sql.Time;
 import java.util.List;
 
+//USADO SOLO POR MODULO "REPORTES" DE GESTION CORREDOR
 public class ExcelBuilder {
     private static final Logger LOG = Logger.getLogger(ExcelBuilder.class);
 
     private CellStyle cellStyleDate;
     private CellStyle cellStyleHeader;
+
+    private CellStyle cellStyleInteger;
     private CellStyle cellStylePorcentual;
+    private CellStyle cellStyle1Decimales;
+    private CellStyle cellStyle2Decimales;
+    private CellStyle cellStyle4Decimales;
 
     public ByteArrayOutputStream getExcelReport(IDataTableModel iteracionModel,
                                                 List<IDataTableModel> models) {
@@ -206,12 +211,14 @@ public class ExcelBuilder {
             int xHeader = 0;
             int xExcel = 0;
             for (List<Object> header : model.getHeaders()) {
-                boolean esColumnaVisible = header.get(4).equals(1);
+                boolean esColumnaVisible = header.get(4).equals(1) || header.get(4).equals(3);
+                boolean mostrarCeros = header.get(3).equals(1);
                 boolean esTexto = header.get(1).equals(1);
                 boolean esNumerico = header.get(1).equals(2);
                 boolean esPorcentual = header.get(1).equals(3);
                 boolean esFecha = header.get(1).equals(4);
                 boolean esImagen = header.get(1).equals(5);
+                boolean noUsaDecimales = header.get(2).equals(0);
 
                 if (!esImagen && esColumnaVisible) {
                     Object o = row.get(xHeader);
@@ -234,24 +241,18 @@ public class ExcelBuilder {
                                 cell.setCellValue((java.util.Date) o);
                             }
                         } else if (esNumerico || esPorcentual) {
-                            if (o instanceof Double) {
-                                cell.setCellValue((Double) o);
-                            } else if (o instanceof Integer) {
-                                cell.setCellValue((Integer) o);
-                            } else if (o instanceof BigDecimal) {
-                                cell.setCellValue(((BigDecimal) o).doubleValue());
-                            } else if (o instanceof BigInteger) {
-                                cell.setCellValue(((BigInteger) o).longValue());
-                            } else if (o instanceof Boolean) {
-                                cell.setCellValue((Boolean) o);
-                            } else if (o instanceof Short) {
-                                cell.setCellValue((Short) o);
-                            } else if (o instanceof Float) {
-                                cell.setCellValue((Float) o);
-                            } else if (o instanceof Long) {
-                                cell.setCellValue((Long) o);
+                            if (!mostrarCeros && Validator.valorEsCero(o)) {
+                                cell.setCellValue("");
                             } else {
-                                cell.setCellValue(o.toString());
+                                if (noUsaDecimales) {
+                                    cell.setCellStyle(this.getCellStyleInteger(sheet.getWorkbook()));
+                                } else {
+                                    cell.setCellStyle(this.getDecimalStyle(sheet.getWorkbook(),
+                                                                           Integer.valueOf(header.get(2).toString())));
+                                }
+
+                                CellUtil.setCellValue(cell,
+                                                      o);
                             }
                         } else if (esTexto) {
                             if (o instanceof String) {
@@ -272,6 +273,15 @@ public class ExcelBuilder {
         }
     }
 
+    private CellStyle getCellStyleInteger(Workbook wb) {
+        if (this.cellStyleInteger == null) {
+            this.cellStyleInteger = wb.createCellStyle();
+            this.cellStyleInteger.setDataFormat(wb.createDataFormat().getFormat("#,##"));
+        }
+
+        return this.cellStyleInteger;
+    }
+
     private CellStyle getCellStylePorcentual(Workbook wb) {
         if (this.cellStylePorcentual == null) {
             this.cellStylePorcentual = wb.createCellStyle();
@@ -289,4 +299,43 @@ public class ExcelBuilder {
 
         return this.cellStyleDate;
     }
+
+    private CellStyle getCellStyle1Decimales(Workbook wb) {
+        if (this.cellStyle1Decimales == null) {
+            this.cellStyle1Decimales = wb.createCellStyle();
+            this.cellStyle1Decimales.setDataFormat(wb.createDataFormat().getFormat("#,##0.0"));
+        }
+
+        return this.cellStyle1Decimales;
+    }
+
+    private CellStyle getCellStyle2Decimales(Workbook wb) {
+        if (this.cellStyle2Decimales == null) {
+            this.cellStyle2Decimales = wb.createCellStyle();
+            this.cellStyle2Decimales.setDataFormat(wb.createDataFormat().getFormat("#,##0.00"));
+        }
+
+        return this.cellStyle2Decimales;
+    }
+
+    private CellStyle getCellStyle4Decimales(Workbook wb) {
+        if (this.cellStyle4Decimales == null) {
+            this.cellStyle4Decimales = wb.createCellStyle();
+            this.cellStyle4Decimales.setDataFormat(wb.createDataFormat().getFormat("#,##0.0000"));
+        }
+
+        return this.cellStyle4Decimales;
+    }
+
+    private CellStyle getDecimalStyle(Workbook wb,
+                                      int decimalCount) {
+        if (decimalCount == 1) {
+            return this.getCellStyle1Decimales(wb);
+        } else if (decimalCount == 4) {
+            return this.getCellStyle4Decimales(wb);
+        }
+
+        return this.getCellStyle2Decimales(wb);
+    }
+
 }
