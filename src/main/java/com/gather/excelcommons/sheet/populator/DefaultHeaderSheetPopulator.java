@@ -1,5 +1,6 @@
 package com.gather.excelcommons.sheet.populator;
 
+import com.gather.excelcommons.sheet.populator.columnResolver.DefaultColumnVisibilityResolver;
 import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
 import org.apache.log4j.Logger;
@@ -21,11 +22,31 @@ public class DefaultHeaderSheetPopulator implements ISheetPopulator {
     private IDataTableModel model;
     private Integer rowStart;
     private CellStyle cellStyleHeader;
+    private IColumnVisibilityResolver columnVisibilityResolver;
 
     public DefaultHeaderSheetPopulator(IDataTableModel model,
                                        Integer rowStart) {
         this.model = model;
         this.rowStart = rowStart;
+        this.columnVisibilityResolver = new DefaultColumnVisibilityResolver();
+    }
+
+    public DefaultHeaderSheetPopulator(IDataTableModel model,
+                                       Integer rowStart,
+                                       IColumnVisibilityResolver columnVisibilityResolver) {
+        this.model = model;
+        this.rowStart = rowStart;
+        this.columnVisibilityResolver = columnVisibilityResolver;
+    }
+
+    public DefaultHeaderSheetPopulator(IDataTableModel model,
+                                       Integer rowStart,
+                                       CellStyle cellStyleHeader,
+                                       IColumnVisibilityResolver columnVisibilityResolver) {
+        this.model = model;
+        this.rowStart = rowStart;
+        this.cellStyleHeader = cellStyleHeader;
+        this.columnVisibilityResolver = columnVisibilityResolver;
     }
 
     private CellStyle getCellStyleHeader(Workbook wb) {
@@ -59,7 +80,10 @@ public class DefaultHeaderSheetPopulator implements ISheetPopulator {
         final CellStyle cellStyle = getCellStyleHeader(sheet.getWorkbook());
 
         for (List<Object> header : model.getHeaders()) {
-            if (!header.get(1).equals(5) && (header.get(4).equals(2) || header.get(4).equals(3))) {
+            boolean columnaNoesImagen = !header.get(1).equals(5);
+            boolean columnaEsVisible = this.columnVisibilityResolver.isVisible(header);
+
+            if (columnaNoesImagen && columnaEsVisible) {
                 Cell cell = headerRow.createCell(columnIndex);
                 cell.setCellStyle(cellStyle);
 
@@ -71,7 +95,7 @@ public class DefaultHeaderSheetPopulator implements ISheetPopulator {
         }
 
         sheet.createFreezePane(0,
-                               1);
+                               rowStart);
 
         for (int x = 0; x < model.getHeaders().size(); x++) {
             sheet.autoSizeColumn(x);
