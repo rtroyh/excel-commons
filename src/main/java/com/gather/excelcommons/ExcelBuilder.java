@@ -145,13 +145,13 @@ public class ExcelBuilder {
         Cell cell = this.createCell(sheet.getWorkbook(),
                                     headerRow,
                                     columnIndex,
-                                    CellStyle.ALIGN_LEFT,
-                                    CellStyle.VERTICAL_TOP);
+                                    HorizontalAlignment.LEFT,
+                                    VerticalAlignment.TOP);
 
         final CellStyle cellStyle = cell.getCellStyle();
         Font font = sheet.getWorkbook().createFont();
         font.setFontHeightInPoints((short) 11);
-        font.setBoldweight(Font.BOLDWEIGHT_NORMAL);
+        font.setBold(true);
         font.setColor(IndexedColors.BLACK.getIndex());
         cellStyle.setFont(font);
 
@@ -171,14 +171,14 @@ public class ExcelBuilder {
     private CellStyle getCellStyleHeader(Workbook wb) {
         if (this.cellStyleHeader == null) {
             this.cellStyleHeader = wb.createCellStyle();
-            this.cellStyleHeader.setAlignment(CellStyle.ALIGN_CENTER);
-            this.cellStyleHeader.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+            this.cellStyleHeader.setAlignment(HorizontalAlignment.CENTER);
+            this.cellStyleHeader.setVerticalAlignment(VerticalAlignment.CENTER);
             this.cellStyleHeader.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
-            this.cellStyleHeader.setFillPattern(CellStyle.SOLID_FOREGROUND);
+            this.cellStyleHeader.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
             Font font = wb.createFont();
             font.setFontHeightInPoints((short) 11);
-            font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+            font.setBold(true);
             font.setColor(IndexedColors.WHITE.getIndex());
 
             this.cellStyleHeader.setFont(font);
@@ -190,8 +190,8 @@ public class ExcelBuilder {
     private Cell createCell(Workbook wb,
                             Row row,
                             short column,
-                            short halign,
-                            short valign) {
+                            HorizontalAlignment halign,
+                            VerticalAlignment valign) {
         Cell cell = row.createCell(column);
         CellStyle cellStyle = wb.createCellStyle();
         cellStyle.setAlignment(halign);
