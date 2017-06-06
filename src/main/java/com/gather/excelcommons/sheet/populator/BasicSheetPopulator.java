@@ -46,14 +46,14 @@ public class BasicSheetPopulator implements ISheetPopulator {
     private CellStyle getCellStyleHeader(Workbook wb) {
         if (this.cellStyleHeader == null) {
             this.cellStyleHeader = wb.createCellStyle();
-            this.cellStyleHeader.setAlignment(CellStyle.ALIGN_CENTER);
-            this.cellStyleHeader.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+            this.cellStyleHeader.setAlignment(HorizontalAlignment.CENTER);
+            this.cellStyleHeader.setVerticalAlignment(VerticalAlignment.CENTER);
             this.cellStyleHeader.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
-            this.cellStyleHeader.setFillPattern(CellStyle.SOLID_FOREGROUND);
+            this.cellStyleHeader.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
             Font font = wb.createFont();
             font.setFontHeightInPoints((short) 11);
-            font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+            font.setBold(true);
             font.setColor(IndexedColors.WHITE.getIndex());
 
             this.cellStyleHeader.setFont(font);
