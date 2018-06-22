@@ -5,7 +5,7 @@
     <groupId>com.gather</groupId>
     <artifactId>excelcommons</artifactId>
     <packaging>jar</packaging>
-    <version>3.16</version>
+    <version>4.0</version>
     <name>excelcommons</name>
 
     <distributionManagement>
@@ -34,24 +34,24 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>${project.version}</version>
+            <version>3.17</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>${project.version}</version>
+            <version>3.17</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>gathercommons</artifactId>
-            <version>1.2</version>
+            <version>1.12.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

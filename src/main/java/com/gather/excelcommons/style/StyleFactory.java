@@ -1,9 +1,7 @@
 package com.gather.excelcommons.style;
 
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,15 +13,15 @@ import org.apache.poi.ss.usermodel.Workbook;
 public class StyleFactory {
     public static CellStyle getBlueHeaderCellStyle(Workbook wb) {
         CellStyle cellStyleHeader = wb.createCellStyle();
-        cellStyleHeader.setAlignment(CellStyle.ALIGN_CENTER);
-        cellStyleHeader.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-        cellStyleHeader.setFillForegroundColor(HSSFColor.DARK_BLUE.index);
-        cellStyleHeader.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        cellStyleHeader.setAlignment(HorizontalAlignment.CENTER);
+        cellStyleHeader.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellStyleHeader.setFillForegroundColor(HSSFColor.HSSFColorPredefined.DARK_BLUE.getIndex());
+        cellStyleHeader.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         Font font = wb.createFont();
         font.setFontHeightInPoints((short) 11);
-        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        font.setColor(HSSFColor.WHITE.index);
+        font.setBold(true);
+        font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
 
         cellStyleHeader.setFont(font);
 

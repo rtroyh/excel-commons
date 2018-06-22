@@ -29,10 +29,20 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
     private CellStyle cellStylePorcentual;
     private List<NumberCellStyle> numberCellStyles;
 
+    private IColumnVisibilityResolver columnVisibilityResolver;
+
     public DefaultBodySheetPopulator(IDataTableModel model,
                                      Integer rowStart) {
         this.model = model;
         this.rowStart = rowStart;
+    }
+
+    public DefaultBodySheetPopulator(IDataTableModel model,
+                                     Integer rowStart,
+                                     IColumnVisibilityResolver columnVisibilityResolver) {
+        this.model = model;
+        this.rowStart = rowStart;
+        this.columnVisibilityResolver = columnVisibilityResolver;
     }
 
     private DataFormat getDataFormat(final Workbook wb) {
@@ -101,8 +111,7 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
     }
 
     @Override
-    public void populate(Sheet sheet) throws
-                                      Exception {
+    public void populate(Sheet sheet) {
         LOG.info("INICIO POBLAMIENTO SHEET");
 
         for (List<Object> row : model.getRows()) {
@@ -111,7 +120,7 @@ public class DefaultBodySheetPopulator implements ISheetPopulator {
             int xHeader = 0;
             int xExcel = 0;
             for (List<Object> header : model.getHeaders()) {
-                boolean esColumnaVisible = header.get(4).equals(2) || header.get(4).equals(3);
+                boolean esColumnaVisible = this.columnVisibilityResolver != null ? columnVisibilityResolver.isVisible(header) : header.get(4).equals(2) || header.get(4).equals(3);
                 boolean esTexto = header.get(1).equals(1);
                 boolean esNumerico = header.get(1).equals(2);
                 boolean esPorcentual = header.get(1).equals(3);

@@ -52,15 +52,15 @@ public class DefaultHeaderSheetPopulator implements ISheetPopulator {
     private CellStyle getCellStyleHeader(Workbook wb) {
         if (this.cellStyleHeader == null) {
             this.cellStyleHeader = wb.createCellStyle();
-            this.cellStyleHeader.setAlignment(CellStyle.ALIGN_CENTER);
-            this.cellStyleHeader.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-            this.cellStyleHeader.setFillForegroundColor(HSSFColor.DARK_BLUE.index);
-            this.cellStyleHeader.setFillPattern(CellStyle.SOLID_FOREGROUND);
+            this.cellStyleHeader.setAlignment(HorizontalAlignment.CENTER);
+            this.cellStyleHeader.setVerticalAlignment(VerticalAlignment.CENTER);
+            this.cellStyleHeader.setFillForegroundColor(HSSFColor.HSSFColorPredefined.DARK_BLUE.getIndex());
+            this.cellStyleHeader.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
             Font font = wb.createFont();
             font.setFontHeightInPoints((short) 11);
-            font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-            font.setColor(HSSFColor.WHITE.index);
+            font.setBold(true);
+            font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
 
             this.cellStyleHeader.setFont(font);
         }
@@ -69,8 +69,7 @@ public class DefaultHeaderSheetPopulator implements ISheetPopulator {
     }
 
     @Override
-    public void populate(Sheet sheet) throws
-                                      Exception {
+    public void populate(Sheet sheet) {
         LOG.info("INICIO POBLAMIENTO SHEET");
 
         short columnIndex = 0;
