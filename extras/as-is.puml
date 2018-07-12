@@ -21,19 +21,17 @@ interface IWorkbookCreator {
 interface ISheetBuilder {
 }
 
-ExcelBuilder "1" o-- "1" IWorkbookCreator
-ExcelBuilder "1" o-- "*" ISheetBuilder
+ExcelBuilder "1" o- "1" IWorkbookCreator
+ExcelBuilder "1" o--- "*" ISheetBuilder
 ISheetBuilder   <|-- DefaultSheetBuilder
 
 package "com.gather.excelcommons.sheet.populator" {
-
     interface ISheetPopulator {
         void populate(Sheet sheet)
     }
 
     ISheetPopulator <|-- ISheetBuilder
-    ISheetPopulator <|-- BasicSheetPopulator
-    ISheetPopulator <|-- DefaultHeaderSheetPopulator
+    DefaultHeaderSheetPopulator --|> ISheetPopulator
     ISheetPopulator <|-- DefaultBodySheetPopulator
 }
 
