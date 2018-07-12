@@ -21,25 +21,31 @@ interface IWorkbookCreator {
 interface ISheetBuilder {
 }
 
-interface ISheetPopulator {
-    void populate(Sheet sheet)
-}
-
-interface ISheetCreator {
-    {method} createSheet(Workbook wb) : Sheet
-    {method} getSheet() : Sheet
-}
-
-
-ExcelBuilder o-- IWorkbookCreator
+ExcelBuilder "1" o-- "1" IWorkbookCreator
 ExcelBuilder "1" o-- "*" ISheetBuilder
-ISheetPopulator <|-- ISheetBuilder
-ISheetCreator   <|-- ISheetBuilder
 ISheetBuilder   <|-- DefaultSheetBuilder
-ISheetPopulator <|-- BasicSheetPopulator
-ISheetPopulator <|-- DefaultHeaderSheetPopulator
-ISheetPopulator <|-- DefaultBodySheetPopulator
-ISheetCreator   <|-- DefaultSheetCreator
+
+package "com.gather.excelcommons.sheet.populator" {
+
+    interface ISheetPopulator {
+        void populate(Sheet sheet)
+    }
+
+    ISheetPopulator <|-- ISheetBuilder
+    ISheetPopulator <|-- BasicSheetPopulator
+    ISheetPopulator <|-- DefaultHeaderSheetPopulator
+    ISheetPopulator <|-- DefaultBodySheetPopulator
+}
+
+package "com.gather.excelcommons.sheet.creator" {
+    interface ISheetCreator {
+        {method} createSheet(Workbook wb) : Sheet
+        {method} getSheet() : Sheet
+    }
+
+    ISheetCreator   <|-- ISheetBuilder
+    ISheetCreator   <|-- DefaultSheetCreator
+}
 
 
 @enduml
