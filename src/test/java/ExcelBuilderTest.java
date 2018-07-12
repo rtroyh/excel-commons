@@ -29,6 +29,7 @@ public class ExcelBuilderTest {
     private IDataTableModel getDataTableModel() {
         final IDataTableModel dataTableModel = new DefaultDataTableModel();
 
+
         List<List<Object>> titles = new ArrayList<>();
         List<Object> title = new ArrayList<>();
         title.add(0);

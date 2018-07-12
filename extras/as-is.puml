@@ -1,0 +1,45 @@
+@startuml
+
+class ExcelBuilder{
+    +{method} void createExcel()
+}
+
+class DefaultSheetBuilder{
+    ..Constructor..
+    +DefaultSheetBuilder(ISheetCreator,ISheetPopulator)
+
+    ..Metodos..
+    +{method} populate(Sheet sheet)
+    +{method} createSheet(Workbook wb) : Sheet
+    +{method} getSheet() : Sheet
+}
+
+interface IWorkbookCreator {
+    {method} getWorkbook() : Workbook
+}
+
+interface ISheetBuilder {
+}
+
+interface ISheetPopulator {
+    void populate(Sheet sheet)
+}
+
+interface ISheetCreator {
+    {method} createSheet(Workbook wb) : Sheet
+    {method} getSheet() : Sheet
+}
+
+
+ExcelBuilder o-- IWorkbookCreator
+ExcelBuilder "1" o-- "*" ISheetBuilder
+ISheetPopulator <|-- ISheetBuilder
+ISheetCreator   <|-- ISheetBuilder
+ISheetBuilder   <|-- DefaultSheetBuilder
+ISheetPopulator <|-- BasicSheetPopulator
+ISheetPopulator <|-- DefaultHeaderSheetPopulator
+ISheetPopulator <|-- DefaultBodySheetPopulator
+ISheetCreator   <|-- DefaultSheetCreator
+
+
+@enduml
