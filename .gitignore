@@ -2,3 +2,5 @@
 .idea/
 excelcommons.iml
 target/
+*.xlsx
+.DS_Store
